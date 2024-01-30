@@ -10,225 +10,210 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:gravity="center"
+        android:maxLines="1"
         android:text="소음기준 정보 입력"
         android:textColor="@color/textColor_default"
-        android:textSize="30dp"
+        android:textSize="60sp"
         android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginVertical="10dp"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_height="0dp"
+        android:layout_marginStart="20dp"
+        android:layout_weight="7"
+        android:orientation="vertical">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.8"
-            android:gravity="right"
-            android:text="배경 소음"
-            android:textColor="@color/textColor_default"
-            android:textSize="25dp"
-            android:textStyle="bold" />
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <ImageView
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:src="@drawable/edt_background" />
+                android:layout_weight="2"
+                android:gravity="right|center"
+                android:text="배경 소음"
+                android:textColor="@color/textColor_default"
+                android:textSize="30sp"
+                android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/edt_standard_1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="30dp"
+                android:layout_weight="1"
+                android:background="@color/editText_background_default"
                 android:elevation="10dp"
-                android:gravity="right"
+                android:gravity="right|center"
                 android:imeOptions="flagNoExtractUi|actionDone"
                 android:inputType="numberDecimal"
                 android:textColor="@color/colorStatusText"
+                android:textSize="30sp"
                 android:textStyle="bold"
                 tools:text="66.4" />
-        </FrameLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="left"
-            android:text="dB(A)"
-            android:textColor="@color/textColor_default"
-            android:textSize="25dp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginVertical="10dp"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.8"
-            android:gravity="right"
-            android:text="등가 기준"
-            android:textColor="@color/textColor_default"
-            android:textSize="25dp"
-            android:textStyle="bold" />
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <ImageView
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:src="@drawable/edt_background" />
+                android:layout_weight="2"
+                android:gravity="left|center"
+                android:text="dB(A)"
+                android:textColor="@color/textColor_default"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="right|center"
+                android:text="등가 기준"
+                android:textColor="@color/textColor_default"
+                android:textSize="30sp"
+                android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/edt_standard_2"
-                android:inputType="numberDecimal"
-                android:imeOptions="flagNoExtractUi|actionDone"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="30dp"
+                android:layout_weight="1"
+                android:background="@color/editText_background_default"
                 android:elevation="10dp"
-                android:gravity="right"
+                android:gravity="right|center"
+                android:imeOptions="flagNoExtractUi|actionDone"
+                android:inputType="numberDecimal"
                 android:textColor="@color/colorStatusText"
+                android:textSize="30sp"
                 android:textStyle="bold"
                 tools:text="66.4" />
-        </FrameLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="left"
-            android:text="dB(A)"
-            android:textColor="@color/textColor_default"
-            android:textSize="25dp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginVertical="10dp"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.8"
-            android:gravity="right"
-            android:text="최고 기준"
-            android:textColor="@color/textColor_default"
-            android:textSize="25dp"
-            android:textStyle="bold" />
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <ImageView
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:src="@drawable/edt_background" />
+                android:layout_weight="2"
+                android:gravity="left|center"
+                android:text="dB(A)"
+                android:textColor="@color/textColor_default"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="right|center"
+                android:text="최고 기준"
+                android:textColor="@color/textColor_default"
+                android:textSize="30sp"
+                android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/edt_standard_3"
-                android:inputType="numberDecimal"
-                android:imeOptions="flagNoExtractUi|actionDone"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="30dp"
+                android:layout_weight="1"
+                android:background="@color/editText_background_default"
                 android:elevation="10dp"
-                android:gravity="right"
+                android:gravity="right|center"
+                android:imeOptions="flagNoExtractUi|actionDone"
+                android:inputType="numberDecimal"
                 android:textColor="@color/colorStatusText"
+                android:textSize="30sp"
                 android:textStyle="bold"
                 tools:text="66.4" />
-        </FrameLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="left"
-            android:text="dB(A)"
-            android:textColor="@color/textColor_default"
-            android:textSize="25dp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginVertical="10dp"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.8"
-            android:gravity="right"
-            android:text="관할경찰서"
-            android:textColor="@color/textColor_default"
-            android:textSize="25dp"
-            android:textStyle="bold" />
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <ImageView
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:src="@drawable/edt_background" />
+                android:layout_weight="2"
+                android:gravity="left|center"
+                android:text="dB(A)"
+                android:textColor="@color/textColor_default"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_marginVertical="5dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="right|center"
+                android:text="관할경찰서"
+                android:textColor="@color/textColor_default"
+                android:textSize="30sp"
+                android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/edt_standard_4"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="30dp"
+                android:layout_weight="1"
+                android:background="@color/editText_background_default"
                 android:elevation="10dp"
-                android:gravity="right"
+                android:gravity="right|center"
                 android:imeOptions="flagNoExtractUi|actionDone"
                 android:inputType="text"
                 android:textColor="@color/colorStatusText"
+                android:textSize="30sp"
                 android:textStyle="bold"
                 tools:text="66.4" />
-        </FrameLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="left"
-            android:text="경찰서"
-            android:textColor="@color/textColor_default"
-            android:textSize="25dp"
-            android:textStyle="bold" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="left|center"
+                android:text="경찰서"
+                android:textColor="@color/textColor_default"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+        </LinearLayout>
     </LinearLayout>
 
     <Button
         android:id="@+id/btn_confirm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="30dp"
+        android:layout_marginHorizontal="300dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        android:layout_weight="0.1"
         android:text="확인"
         android:textSize="20dp"
         android:textStyle="bold" />

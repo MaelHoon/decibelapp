@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_default"
     android:orientation="vertical">
 
     <TextView
@@ -18,120 +20,136 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:layout_marginHorizontal="15dp"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_marginHorizontal="15dp"
+            android:layout_weight="1.3">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="30dp"
                 android:layout_weight="3"
-                android:autoSizeMinTextSize="70sp"
-                android:autoSizeStepGranularity="1sp"
-                android:autoSizeTextType="uniform"
                 android:gravity="center|left"
                 android:maxLines="1"
-                android:text="현재 소음1"
+                android:text="현재 소음"
                 android:textColor="@color/textColor_default"
+                android:textSize="70sp"
                 android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/content_title"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:autoSizeMinTextSize="5sp"
-                    android:autoSizeStepGranularity="1sp"
                     android:autoSizeTextType="uniform"
+                    android:layout_weight="1.2"
+                    android:autoSizeMaxTextSize="70sp"
+                    android:autoSizeMinTextSize="40sp"
+                    android:autoSizeStepGranularity="1sp"
                     android:gravity="center"
                     android:text="&lt;소음기준&gt;"
                     android:textColor="@color/textColor_default"
                     android:textStyle="bold" />
 
                 <LinearLayout
+                    android:id="@+id/content_01"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1.4"
+                    android:layout_weight="1"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:autoSizeMinTextSize="10sp"
+                        android:layout_weight="1.5"
+                        android:autoSizeMaxTextSize="40sp"
+                        android:autoSizeMinTextSize="20sp"
                         android:autoSizeTextType="uniform"
-                        android:gravity="center"
+                        android:autoSizeStepGranularity="1sp"
+                        android:gravity="center|right"
                         android:text="최고소음"
                         android:textColor="@color/textColor_default"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tv_stdMaxDecibel"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:autoSizeMinTextSize="10sp"
+                        android:layout_weight="0.6"
+                        android:autoSizeMaxTextSize="50sp"
+                        android:autoSizeMinTextSize="30sp"
+                        android:autoSizeStepGranularity="1sp"
                         android:autoSizeTextType="uniform"
-                        android:gravity="right"
+                        android:gravity="right|center"
                         android:textColor="@color/colorStatusText"
                         android:textStyle="bold"
                         tools:text="60" />
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
+                        android:layout_marginLeft="5dp"
                         android:layout_weight="1"
-                        android:autoSizeMinTextSize="5sp"
+                        android:autoSizeMaxTextSize="40sp"
+                        android:autoSizeMinTextSize="20sp"
                         android:autoSizeTextType="uniform"
-                        android:gravity="center"
+                        android:autoSizeStepGranularity="1sp"
+                        android:gravity="center|left"
                         android:text="dBA"
                         android:textColor="@color/textColor_default"
                         android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/content_02"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1.4"
+                    android:layout_weight="1"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:autoSizeMinTextSize="10sp"
+                        android:layout_weight="1.5"
+                        android:autoSizeMaxTextSize="40sp"
                         android:autoSizeTextType="uniform"
-                        android:gravity="center"
+                        android:autoSizeMinTextSize="20sp"
+                        android:autoSizeStepGranularity="1sp"
+                        android:gravity="center|right"
                         android:text="등가소음"
                         android:textColor="@color/textColor_default"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tv_stdThrDecibel"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:autoSizeMinTextSize="10sp"
+                        android:layout_weight="0.6"
+                        android:autoSizeMaxTextSize="50sp"
+                        android:autoSizeMinTextSize="30sp"
+                        android:autoSizeStepGranularity="1sp"
                         android:autoSizeTextType="uniform"
-                        android:gravity="right"
+                        android:gravity="right|center"
                         android:textColor="@color/colorStatusText"
                         android:textStyle="bold"
                         tools:text="60" />
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
+                        android:layout_marginLeft="5dp"
                         android:layout_weight="1"
-                        android:autoSizeMinTextSize="5sp"
                         android:autoSizeTextType="uniform"
-                        android:gravity="center"
+                        android:autoSizeMaxTextSize="40sp"
+                        android:autoSizeMinTextSize="20sp"
+                        android:autoSizeStepGranularity="1sp"
+                        android:gravity="center|left"
                         android:text="dBA"
                         android:textColor="@color/textColor_default"
                         android:textStyle="bold" />
@@ -151,29 +169,58 @@
                 android:id="@+id/tv_currentDecibel"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="30dp"
-                android:layout_weight="2"
-                android:autoSizeMinTextSize="100sp"
-                android:autoSizeStepGranularity="1sp"
+                android:layout_weight="1.8"
+                android:autoSizeMaxTextSize="3080sp"
+                android:autoSizeMinTextSize="50sp"
+                android:autoSizeStepGranularity="2sp"
                 android:autoSizeTextType="uniform"
-                android:gravity="center"
+                android:gravity="center|right"
                 android:maxLines="1"
-                android:text="30.8"
+                android:text=""
                 android:textColor="@color/colorStatusText"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:text="30.8" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="40dp"
                 android:layout_weight="1"
-                android:autoSizeMaxTextSize="70sp"
-                android:autoSizeStepGranularity="1sp"
+                android:autoSizeMaxTextSize="100sp"
+                android:autoSizeMinTextSize="20sp"
+                android:autoSizeStepGranularity="2sp"
                 android:autoSizeTextType="uniform"
-                android:gravity="bottom"
+                android:gravity="center|left"
                 android:maxLines="1"
                 android:text="dBA"
                 android:textColor="@color/textColor_default"
                 android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="bottom"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/layer02"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/img_police_logo" />
+
+            <TextView
+                android:id="@+id/tv_police_name"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center|left"
+                android:textColor="@color/textColor_default"
+                android:textSize="25dp"
+                android:textStyle="bold"
+                tools:text="영등포경찰서장" />
         </LinearLayout>
     </LinearLayout>
 

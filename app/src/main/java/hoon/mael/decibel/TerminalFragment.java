@@ -23,16 +23,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.airbnb.lottie.LottieAnimationView;
+
 import java.util.ArrayDeque;
 
 import hoon.mael.decibel.Utils.MessageUtils;
 import hoon.mael.decibel.Utils.PrefUtils;
+import hoon.mael.decibel.model.DecibelModel;
+import hoon.mael.decibel.ui.InputDecibelActivity;
 
 
 public class TerminalFragment extends Fragment implements ServiceConnection, SerialListener {
@@ -50,17 +56,15 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
     private boolean hexEnabled = false;
     private String newline = TextUtil.newline_crlf;
 
-    private View inputView, terminalView, decibelPageIntro, decibelPage01, decibelPage02, decibelPage03, layoutButton;
-    private EditText edtStandard1, edtStandard2, edtStandard3, edtStandard4;
-    private Button confirm, btnPrev, btnNext;
+    private View  terminalView, decibelPage01, decibelPage02, decibelPage03, layoutButton;
+    private Button btnPrev, btnNext;
     private View frameDecibel;
 
     private PrefUtils prefUtils;
     private GestureDetector gestureDetector;
 
     private String instantDecibel, averageDecibel;
-
-    private int decibelPageIndex = 1;
+    private LottieAnimationView progressBar;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -92,7 +96,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
     @Override
     public void onStop() {
         if (service != null && !getActivity().isChangingConfigurations())
-            service.detach();
+            //service.detach();
         super.onStop();
     }
 
@@ -149,7 +153,6 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
         initComponentValue();
         initListener();
 
-
         return terminalView;
     }
 
@@ -157,13 +160,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
         gestureDetector = new GestureDetector(requireContext(), new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onDoubleTap(MotionEvent e) {
-                if (decibelPageIntro.getVisibility() == View.VISIBLE) {
-                    decibelPageIntro.setVisibility(View.GONE);
-                    layoutButton.setVisibility(View.VISIBLE);
-                } else {
-                    decibelPageIntro.setVisibility(View.VISIBLE);
-                    layoutButton.setVisibility(View.GONE);
-                }
+
                 return true;
             }
         });
@@ -171,29 +168,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
 
     @SuppressLint("ClickableViewAccessibility")
     private void initListener() {
-        decibelPageIntro.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                gestureDetector.onTouchEvent(event);
-                return true;
-            }
-        });
 
-
-        confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!isInputComplete()) {
-                    MessageUtils.showToastMassage(requireContext(), "항목을 모두 채워 주세요!");
-                    return;
-                }
-
-                inputView.setVisibility(View.GONE);
-                decibelPageIntro.setVisibility(View.VISIBLE);
-
-                saveInputValue();
-            }
-        });
         btnPrev.setOnClickListener(view -> {
             delay = System.currentTimeMillis() + 200;
 
@@ -203,10 +178,8 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
             if (System.currentTimeMillis() <= delay) {
                 if (frameDecibel.getVisibility() == View.GONE) {
                     frameDecibel.setVisibility(View.VISIBLE);
-                    decibelPageIntro.setVisibility(View.GONE);
                 } else {
                     frameDecibel.setVisibility(View.GONE);
-                    decibelPageIntro.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -220,41 +193,20 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
             if (System.currentTimeMillis() <= delay) {
                 if (frameDecibel.getVisibility() == View.GONE) {
                     frameDecibel.setVisibility(View.VISIBLE);
-                    decibelPageIntro.setVisibility(View.GONE);
                 } else {
                     frameDecibel.setVisibility(View.GONE);
-                    decibelPageIntro.setVisibility(View.VISIBLE);
                 }
             }
         });
     }
 
     private void saveInputValue() {
-        String value1 = edtStandard1.getText().toString();
-        String value2 = edtStandard2.getText().toString();
-        String value3 = edtStandard3.getText().toString();
-        String value4 = edtStandard4.getText().toString();
 
-        prefUtils.saveString("standardInput1", value1);
-        prefUtils.saveString("standardInput2", value2);
-        prefUtils.saveString("standardInput3", value3);
-        prefUtils.saveString("standardInput4", value4);
-    }
 
-    private boolean isInputComplete() {
-        String value1 = edtStandard1.getText().toString();
-        String value2 = edtStandard2.getText().toString();
-        String value3 = edtStandard3.getText().toString();
-        String value4 = edtStandard4.getText().toString();
-
-        // 하나라도 비어 있다면 false 반환
-        // 모두 값이 있다면 true 반환
-        return !TextUtils.isEmpty(value1) && !TextUtils.isEmpty(value2) && !TextUtils.isEmpty(value3) && !TextUtils.isEmpty(value4);
     }
 
     private void initComponent() {
-        inputView = terminalView.findViewById(R.id.layout_input_decibel);
-        decibelPageIntro = terminalView.findViewById(R.id.layout_page_decibel_intro);
+        progressBar = terminalView.findViewById(R.id.progressBar);
         decibelPage01 = terminalView.findViewById(R.id.layout_page_decibel_01);
         decibelPage02 = terminalView.findViewById(R.id.layout_page_decibel_02);
         decibelPage03 = terminalView.findViewById(R.id.layout_page_decibel_03);
@@ -263,12 +215,6 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
         btnPrev = layoutButton.findViewById(R.id.btn_prev);
         btnNext = layoutButton.findViewById(R.id.btn_next);
 
-        edtStandard1 = inputView.findViewById(R.id.edt_standard_1);
-        edtStandard2 = inputView.findViewById(R.id.edt_standard_2);
-        edtStandard3 = inputView.findViewById(R.id.edt_standard_3);
-        edtStandard4 = inputView.findViewById(R.id.edt_standard_4);
-        confirm = inputView.findViewById(R.id.btn_confirm);
-
         receiveText = decibelPage01.findViewById(R.id.receive_text);
         tvStdMaxDecibel = decibelPage01.findViewById(R.id.tv_stdMaxDecibel);
         tvCurrentDecibel = decibelPage01.findViewById(R.id.tv_currentDecibel);
@@ -276,10 +222,6 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
     }
 
     private void initComponentValue() {
-        edtStandard1.setText(prefUtils.getString("standardInput1"));
-        edtStandard2.setText(prefUtils.getString("standardInput2"));
-        edtStandard3.setText(prefUtils.getString("standardInput3"));
-        edtStandard4.setText(prefUtils.getString("standardInput4"));
 
         tvStdMaxDecibel.setText(prefUtils.getString("standardInput3"));
         tvStdThrDecibel.setText(prefUtils.getString("standardInput2"));
@@ -372,6 +314,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
             BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             BluetoothDevice device = bluetoothAdapter.getRemoteDevice(deviceAddress);
             status("connecting...");
+
             connected = Connected.Pending;
             SerialSocket socket = new SerialSocket(getActivity().getApplicationContext(), device);
             service.connect(socket);
@@ -383,6 +326,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
     private void disconnect() {
         connected = Connected.False;
         service.disconnect();
+        Toast.makeText(requireContext(), "장치 연결에 실패 하였습니다.\n 전원을 확인 바랍니다.", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -404,6 +348,8 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
 
                     updateDecibelUiPage01(instantDecibel);
                     Log.d("마엘", "순간 데시벨 : " + words[1] + "평균 데시벨" + words[2]);
+                    DecibelModel.setCurrentDecibel(instantDecibel);
+                    DecibelModel.setAverageDecibel(averageDecibel);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -432,12 +378,23 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
     public void onSerialConnect() {
         status("connected");
         connected = Connected.True;
+
+        progressBar.setVisibility(View.GONE);
+        Intent intent = new Intent(requireContext(), InputDecibelActivity.class);
+        intent.putExtra("asd", instantDecibel);
+        intent.putExtra("asd2", averageDecibel);
+        startActivity(intent);
     }
 
     @Override
     public void onSerialConnectError(Exception e) {
         status("connection failed: " + e.getMessage());
         disconnect();
+
+        Intent intent = new Intent(requireContext(), MainActivity.class);
+        startActivity(intent);
+
+        Toast.makeText(requireContext(),"장치 연결에 실패 하였습니다.\n 전원을 확인 바랍니다.",Toast.LENGTH_SHORT).show();
     }
 
     @Override

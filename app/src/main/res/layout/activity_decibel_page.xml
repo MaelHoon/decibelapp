@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/layout_page_decibel_01"
+        layout="@layout/page_decibel_01" />
+
+    <include
+        android:id="@+id/layout_page_decibel_02"
+        layout="@layout/page_decibel_02"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/layout_page_decibel_03"
+        layout="@layout/page_decibel_03"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_prev"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/transparent" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_next"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/transparent" />
+    </LinearLayout>
+</FrameLayout>
