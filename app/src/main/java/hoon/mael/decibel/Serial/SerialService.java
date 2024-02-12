@@ -1,4 +1,4 @@
-package hoon.mael.decibel;
+package hoon.mael.decibel.Serial;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -19,14 +19,17 @@ import androidx.core.app.NotificationCompat;
 import java.io.IOException;
 import java.util.ArrayDeque;
 
+import hoon.mael.decibel.Constants;
+import hoon.mael.decibel.R;
+
 /**
  * create notification and queue serial data while activity is not in the foreground
  * use listener chain: SerialSocket -> SerialService -> UI fragment
  */
 public class SerialService extends Service implements SerialListener {
 
-    class SerialBinder extends Binder {
-        SerialService getService() { return SerialService.this; }
+    public class SerialBinder extends Binder {
+        public SerialService getService() { return SerialService.this; }
     }
 
     private enum QueueType {Connect, ConnectError, Read, IoError}

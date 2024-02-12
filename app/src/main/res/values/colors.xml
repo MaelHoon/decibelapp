@@ -6,8 +6,11 @@
     <color name="colorAccent">#ff6e40</color>
 
     <color name="colorRecieveText">#00FF00</color>
+    <color name="btnColor01">#FFEB3B</color>
+    <color name="btnColor02">#9DE49D</color>
     <color name="colorSendText">#82CAFF</color>
     <color name="colorStatusText">#FFDB58</color>
+    <color name="colorPrimaryButton">#03A9F4</color>
 
     <color name="background_default">#000000</color>
     <color name="textColor_default">#FFFFFF</color>

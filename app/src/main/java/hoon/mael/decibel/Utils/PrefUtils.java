@@ -8,6 +8,9 @@ public class PrefUtils {
     private final SharedPreferences preferences;
     private Context context;
 
+    public static final String NOTICE_TITLE_KEY = "NOTICE_TITLE_KEY";
+    public static final String NOTICE_CONTENT_KEY = "NOTICE_CONTENT_KEY";
+
     public PrefUtils(Context context){
         this.context = context;
         preferences= PreferenceManager.getDefaultSharedPreferences(context);

@@ -20,7 +20,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity
-            android:name="hoon.mael.decibel.MainActivity"
+            android:name=".ui.MainActivity"
             android:exported="true"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan">
@@ -29,7 +29,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name="hoon.mael.decibel.SerialService" />
+        <activity
+            android:name=".ui.DeviceSelectActivity"
+            android:screenOrientation="landscape" />
+
+        <service android:name="hoon.mael.decibel.Serial.SerialService" />
+
+        <activity
+            android:name=".ui.CalculateActivity"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.DecibelIntroActivity"
@@ -40,6 +48,10 @@
             android:screenOrientation="landscape" />
         <activity
             android:name=".ui.DecibelPageActivity"
+            android:screenOrientation="landscape" />
+
+        <activity
+            android:name=".ui.NoticeActivity"
             android:screenOrientation="landscape" />
     </application>
 

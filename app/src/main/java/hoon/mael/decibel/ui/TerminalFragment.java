@@ -1,8 +1,7 @@
-package hoon.mael.decibel;
+package hoon.mael.decibel.ui;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.ComponentName;
@@ -11,7 +10,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -22,8 +20,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,10 +31,12 @@ import com.airbnb.lottie.LottieAnimationView;
 
 import java.util.ArrayDeque;
 
-import hoon.mael.decibel.Utils.MessageUtils;
+import hoon.mael.decibel.R;
+import hoon.mael.decibel.Serial.SerialListener;
+import hoon.mael.decibel.Serial.SerialService;
+import hoon.mael.decibel.Serial.SerialSocket;
 import hoon.mael.decibel.Utils.PrefUtils;
 import hoon.mael.decibel.model.DecibelModel;
-import hoon.mael.decibel.ui.InputDecibelActivity;
 
 
 public class TerminalFragment extends Fragment implements ServiceConnection, SerialListener {
@@ -54,9 +52,8 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
     private Connected connected = Connected.False;
     private boolean initialStart = true;
     private boolean hexEnabled = false;
-    private String newline = TextUtil.newline_crlf;
 
-    private View  terminalView, decibelPage01, decibelPage02, decibelPage03, layoutButton;
+    private View terminalView, decibelPage01, decibelPage02, decibelPage03, layoutButton;
     private Button btnPrev, btnNext;
     private View frameDecibel;
 
@@ -97,7 +94,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
     public void onStop() {
         if (service != null && !getActivity().isChangingConfigurations())
             //service.detach();
-        super.onStop();
+            super.onStop();
     }
 
     @SuppressWarnings("deprecation")
@@ -282,28 +279,8 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.clear) {
-            receiveText.setText("");
-            return true;
-        } else if (id == R.id.newline) {
-            String[] newlineNames = getResources().getStringArray(R.array.newline_names);
-            String[] newlineValues = getResources().getStringArray(R.array.newline_values);
-            int pos = java.util.Arrays.asList(newlineValues).indexOf(newline);
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle("Newline");
-            builder.setSingleChoiceItems(newlineNames, pos, (dialog, item1) -> {
-                newline = newlineValues[item1];
-                dialog.dismiss();
-            });
-            builder.create().show();
-            return true;
-        } else if (id == R.id.hex) {
-            hexEnabled = !hexEnabled;
-            item.setChecked(hexEnabled);
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     /*
@@ -336,6 +313,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
         for (byte[] data : datas) {
             String ByteToStr = new String(data);
             str = str.append(ByteToStr);
+            Log.d("마엘", ByteToStr);
 
             if (str.toString().contains("\n\r")) {
                 String str1 = String.valueOf(str);
@@ -347,7 +325,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
                     averageDecibel = words[2];
 
                     updateDecibelUiPage01(instantDecibel);
-                    Log.d("마엘", "순간 데시벨 : " + words[1] + "평균 데시벨" + words[2]);
+                    //Log.d("마엘", "순간 데시벨 : " + words[1] + "평균 데시벨" + words[2]);
                     DecibelModel.setCurrentDecibel(instantDecibel);
                     DecibelModel.setAverageDecibel(averageDecibel);
                 } catch (Exception e) {
@@ -391,10 +369,10 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
         status("connection failed: " + e.getMessage());
         disconnect();
 
-        Intent intent = new Intent(requireContext(), MainActivity.class);
+        Intent intent = new Intent(requireContext(), DeviceSelectActivity.class);
         startActivity(intent);
 
-        Toast.makeText(requireContext(),"장치 연결에 실패 하였습니다.\n 전원을 확인 바랍니다.",Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), "장치 연결에 실패 하였습니다.\n 전원을 확인 바랍니다.", Toast.LENGTH_SHORT).show();
     }
 
     @Override

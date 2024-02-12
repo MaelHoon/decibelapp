@@ -1,4 +1,4 @@
-package hoon.mael.decibel;
+package hoon.mael.decibel.ui;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -26,6 +26,9 @@ import androidx.fragment.app.ListFragment;
 
 import java.util.ArrayList;
 import java.util.Collections;
+
+import hoon.mael.decibel.R;
+import hoon.mael.decibel.Utils.BluetoothUtil;
 
 
 public class DevicesFragment extends ListFragment {
@@ -108,7 +111,7 @@ public class DevicesFragment extends ListFragment {
     }
 
     @SuppressLint("MissingPermission")
-    void refresh() {
+    public void refresh() {
         if(BluetoothUtil.hasPermissions(this, requestBluetoothPermissionLauncherForRefresh))
 
             listItems.clear();

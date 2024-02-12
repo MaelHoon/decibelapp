@@ -2,7 +2,6 @@ package hoon.mael.decibel.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -15,10 +14,8 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import hoon.mael.decibel.R;
-import hoon.mael.decibel.TerminalFragment;
 import hoon.mael.decibel.Utils.PrefUtils;
 import hoon.mael.decibel.databinding.ActivityDecibelIntroBinding;
 import hoon.mael.decibel.model.DecibelModel;
@@ -143,6 +140,11 @@ public class DecibelIntroActivity extends AppCompatActivity {
                     new Handler().postDelayed(this::showNextPage, 500);
                 }
             }
+        });
+
+        tvPoliceName.setOnClickListener(view ->{
+            Intent intent = new Intent(getApplicationContext(),NoticeActivity.class);
+            startActivity(intent);
         });
     }
 
