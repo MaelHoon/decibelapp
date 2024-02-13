@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import hoon.mael.decibel.R;
+import hoon.mael.decibel.Utils.BluetoothStateUtil;
 import hoon.mael.decibel.Utils.PrefUtils;
 import hoon.mael.decibel.databinding.ActivityDecibelIntroBinding;
 import hoon.mael.decibel.model.DecibelModel;
@@ -152,9 +153,13 @@ public class DecibelIntroActivity extends AppCompatActivity {
         currentDecibel = DecibelModel.getCurrentDecibel();
         averageDecibel = DecibelModel.getAverageDecibel();
 
-        if (isStandardOver(currentDecibel, standardMaxDecibel)) {
-            showThrOverPage(pageIndex);
-        } else {
+        if(BluetoothStateUtil.getReceiveStatus()) {
+            if (isStandardOver(currentDecibel, standardMaxDecibel)) {
+                showThrOverPage(pageIndex);
+            } else {
+                hideThrOverPage();
+            }
+        }else{
             hideThrOverPage();
         }
     }

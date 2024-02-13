@@ -20,7 +20,7 @@
         android:hint="내용을입력해주세요"
         android:textColor="@color/textColor_default"
         android:textSize="30sp"
-        android:textStyle="bold" />
+        android:textStyle="bold" />`
 
     <EditText
         android:imeOptions="flagNoExtractUi|actionDone"

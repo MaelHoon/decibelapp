@@ -29,12 +29,15 @@ import androidx.fragment.app.Fragment;
 
 import com.airbnb.lottie.LottieAnimationView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayDeque;
+import java.util.Date;
 
 import hoon.mael.decibel.R;
 import hoon.mael.decibel.Serial.SerialListener;
 import hoon.mael.decibel.Serial.SerialService;
 import hoon.mael.decibel.Serial.SerialSocket;
+import hoon.mael.decibel.Utils.BluetoothStateUtil;
 import hoon.mael.decibel.Utils.PrefUtils;
 import hoon.mael.decibel.model.DecibelModel;
 
@@ -62,6 +65,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
 
     private String instantDecibel, averageDecibel;
     private LottieAnimationView progressBar;
+    private int hours, minutes, remainingSeconds;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -310,17 +314,37 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
     StringBuffer str = new StringBuffer("");
 
     private void receive(ArrayDeque<byte[]> datas) {
-        for (byte[] data : datas) {
-            String ByteToStr = new String(data);
-            str = str.append(ByteToStr);
-            Log.d("마엘", ByteToStr);
+        try {
+            for (byte[] data : datas) {
+                String ByteToStr = new String(data);
+                str = str.append(ByteToStr);
 
-            if (str.toString().contains("\n\r")) {
-                String str1 = String.valueOf(str);
-                String[] words = str1.split(",");
+                if (str.toString().contains("\n\r")) {
+                    String str1 = String.valueOf(str);
+                    String[] words = str1.split(",");
+                    Log.d("마엘", words[0]);
+                    str.setLength(0);
 
-                str.setLength(0);
-                try {
+                    if (words[0].matches("\\d+")) {//0번째 값이 숫자일 경우에만 참이되도록 정규식사용
+                        int nthData = Integer.parseInt(words[0]);
+                        hours = nthData / 3600;
+                        minutes = (nthData % 3600) / 60;
+                        remainingSeconds = nthData % 60;
+
+                        BluetoothStateUtil.setIsReceiveStarted(true);
+                    } else {
+                        if (words[0].contains("Q")) {
+                            String timeString = String.format("%02d:%02d:%02d", hours, minutes, remainingSeconds);
+                            String currentTime = getCurrentTime();
+
+                            String endReceiveString = currentTime + " Runtime " + timeString;
+                            Log.d("마엘", endReceiveString);
+
+                            BluetoothStateUtil.setIsReceiveStarted(false);
+                            BluetoothStateUtil.setReceiveEndString(endReceiveString);
+                        }
+                    }
+
                     instantDecibel = words[1];
                     averageDecibel = words[2];
 
@@ -328,11 +352,17 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
                     //Log.d("마엘", "순간 데시벨 : " + words[1] + "평균 데시벨" + words[2]);
                     DecibelModel.setCurrentDecibel(instantDecibel);
                     DecibelModel.setAverageDecibel(averageDecibel);
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
+
+    private String getCurrentTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+        Date date = new Date();
+        return sdf.format(date);
     }
 
     void updateDecibelUiPage01(String currentDecibel) {

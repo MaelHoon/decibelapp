@@ -6,6 +6,16 @@
     android:background="@color/background_default"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/tv_receive_end_string_02"
+        android:visibility="gone"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        android:textSize="30sp"
+        tools:text="2023.04.27 11:17:16 Runtime 00:01:00"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
