@@ -40,7 +40,7 @@ public class CalculateActivity extends AppCompatActivity {
             tvSum.setText("");
         });
         btnCal.setOnClickListener(view -> {
-            if (edtBgDecibel.getText().equals("") || edtMsDecibel.getText().equals("")) {
+            if (edtBgDecibel.getText().toString().equals("") || edtMsDecibel.getText().toString().equals("")) {
                 Toast.makeText(getApplicationContext(), "값을 입력해 주세요!", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -55,12 +55,16 @@ public class CalculateActivity extends AppCompatActivity {
 
     private void calValues() {
         double bgDecibel, measureDecibel;
+        if (edtBgDecibel.getText().toString().equals("") || edtMsDecibel.getText().toString().equals("")) {
+            Toast.makeText(getApplicationContext(), "값을 입력해 주세요!", Toast.LENGTH_SHORT).show();
+            return;
+        }
         bgDecibel = Double.parseDouble(edtBgDecibel.getText().toString());
         measureDecibel = Double.parseDouble(edtMsDecibel.getText().toString());
 
         interval = Math.round((measureDecibel - bgDecibel)*10)/10.0;
         correction = CalculateUtil.calculateCorrection(measureDecibel, bgDecibel);
-        sum = measureDecibel + correction;
+        sum = Math.round(measureDecibel + correction);
         result = Math.round(sum);
     }
 
