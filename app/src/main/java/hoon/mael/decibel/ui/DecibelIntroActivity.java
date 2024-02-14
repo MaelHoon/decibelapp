@@ -1,5 +1,7 @@
 package hoon.mael.decibel.ui;
 
+import static hoon.mael.decibel.Utils.MessageUtils.disableNavigationBar;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -72,6 +74,9 @@ public class DecibelIntroActivity extends AppCompatActivity {
 
         initComponent();
         initListener();
+
+        disableNavigationBar(this);
+
     }
     @Override
     protected void onResume() {

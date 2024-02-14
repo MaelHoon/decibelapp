@@ -1,5 +1,7 @@
 package hoon.mael.decibel.ui;
 
+import static hoon.mael.decibel.Utils.MessageUtils.disableNavigationBar;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
@@ -64,6 +66,9 @@ public class DevicesFragment extends ListFragment {
         requestBluetoothPermissionLauncherForRefresh = registerForActivityResult(
                 new ActivityResultContracts.RequestPermission(),
                 granted -> BluetoothUtil.onPermissionsResult(this, granted, this::refresh));
+
+        disableNavigationBar(requireActivity());
+
     }
 
     @Override

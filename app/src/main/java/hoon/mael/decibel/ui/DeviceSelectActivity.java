@@ -1,5 +1,7 @@
 package hoon.mael.decibel.ui;
 
+import static hoon.mael.decibel.Utils.MessageUtils.disableNavigationBar;
+
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -28,6 +30,13 @@ public class DeviceSelectActivity extends AppCompatActivity implements FragmentM
         } else {
             onBackStackChanged();
         }
+
+        binding.btnHome.setOnClickListener(view ->{
+            finish();
+        });
+
+        disableNavigationBar(this);
+
     }
 
     @Override

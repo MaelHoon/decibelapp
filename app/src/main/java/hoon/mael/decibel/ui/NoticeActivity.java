@@ -1,5 +1,7 @@
 package hoon.mael.decibel.ui;
 
+import static hoon.mael.decibel.Utils.MessageUtils.disableNavigationBar;
+
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -33,6 +35,9 @@ public class NoticeActivity extends AppCompatActivity {
         initBinding();
         initViews();
         initListener();
+
+        disableNavigationBar(this);
+
     }
 
     private void initViews() {

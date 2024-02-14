@@ -4,21 +4,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/textColor_default"
-    android:paddingVertical="35dp">
+    android:background="@color/textColor_default">
 
-    <TextView
-        android:id="@+id/tv_cal_title"
+    <FrameLayout
+        android:id="@+id/layout_cal_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="집회시위 소음 측정 계산기"
-        android:textColor="@color/background_default"
-        android:textSize="37dp"
-        android:textStyle="bold"
+        android:layout_marginTop="35dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tv_cal_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="집회시위 소음 측정 계산기"
+            android:layout_gravity="center"
+            android:textColor="@color/background_default"
+            android:textSize="37dp"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/btn_home"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_home" />
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,7 +42,7 @@
         app:layout_constraintBottom_toTopOf="@id/view_cal_result"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_cal_title">
+        app:layout_constraintTop_toBottomOf="@id/layout_cal_title">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -269,6 +282,7 @@
         android:id="@+id/view_cal_result"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="35dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">

@@ -1,5 +1,7 @@
 package hoon.mael.decibel.ui;
 
+import static hoon.mael.decibel.Utils.MessageUtils.disableNavigationBar;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -36,6 +38,9 @@ public class InputDecibelActivity extends AppCompatActivity {
         initComponent();
         initValue();
         initListener();
+
+        disableNavigationBar(this);
+
     }
 
     private void initComponent() {

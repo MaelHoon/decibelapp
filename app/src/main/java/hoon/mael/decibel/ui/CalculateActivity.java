@@ -1,5 +1,7 @@
 package hoon.mael.decibel.ui;
 
+import static hoon.mael.decibel.Utils.MessageUtils.disableNavigationBar;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.widget.Button;
@@ -30,6 +32,9 @@ public class CalculateActivity extends AppCompatActivity {
         initBinding();
         initViews();
         initListener();
+
+        disableNavigationBar(this);
+
     }
 
     private void initListener() {
@@ -50,6 +55,9 @@ public class CalculateActivity extends AppCompatActivity {
             tvCorrection.setText(String.valueOf(correction));
             tvSum.setText(String.valueOf(sum));
             tvCalResult.setText(String.valueOf(result));
+        });
+        binding.btnHome.setOnClickListener(view ->{
+            finish();
         });
     }
 

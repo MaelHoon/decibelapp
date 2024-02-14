@@ -1,5 +1,7 @@
 package hoon.mael.decibel.ui;
 
+import static hoon.mael.decibel.Utils.MessageUtils.disableNavigationBar;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -75,6 +77,11 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
         deviceAddress = getArguments().getString("device");
 
         prefUtils = new PrefUtils(requireContext());
+        Activity activity = getActivity();
+        if (activity != null) {
+
+            disableNavigationBar(activity);
+        }
     }
 
     @Override
