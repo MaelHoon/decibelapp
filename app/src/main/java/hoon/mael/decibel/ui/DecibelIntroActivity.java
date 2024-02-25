@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import hoon.mael.decibel.R;
 import hoon.mael.decibel.Utils.BluetoothStateUtil;
+import hoon.mael.decibel.Utils.PageUtil;
 import hoon.mael.decibel.Utils.PrefUtils;
 import hoon.mael.decibel.databinding.ActivityDecibelIntroBinding;
 import hoon.mael.decibel.model.DecibelModel;
@@ -104,8 +105,8 @@ public class DecibelIntroActivity extends AppCompatActivity {
             return true;
         });
 
-        btnPrev = binding.btnPrev;
-        btnNext = binding.btnNext;
+        btnPrev = binding.layoutBtn.btnPrev;
+        btnNext = binding.layoutBtn.btnNext;
         tvPoliceName = binding.tvPoliceName;
         tvPoliceName.setText(policeName);
 
@@ -114,42 +115,13 @@ public class DecibelIntroActivity extends AppCompatActivity {
 
     private void initListener() {
         btnPrev.setOnClickListener(view -> {
-            btnClickCount++;
-
-            if (btnClickCount == 2) {
-                btnClickCount = 0;  // 초기화
-
-                Intent intent = new Intent(getApplicationContext(), DecibelPageActivity.class);
-                startActivity(intent);
-                finish();
-            } else {
-                // 첫 번째 클릭 후 500ms 내에 다시 클릭되지 않으면 초기화
-                new Handler().postDelayed(() -> btnClickCount = 0, 500);
-                if (isOverThr) {
-                    new Handler().postDelayed(this::showPrevPage, 500);
-                }
-            }
+            finish();
+            PageUtil.startActivity(getApplicationContext(),InputDecibelActivity.class);
         });
         btnNext.setOnClickListener(view -> {
-            btnClickCount++;
-
-            if (btnClickCount == 2) {
-                btnClickCount = 0;  // 초기화
-
-                Intent intent = new Intent(getApplicationContext(), DecibelPageActivity.class);
-                startActivity(intent);
-                finish();
-            } else {
-                // 첫 번째 클릭 후 500ms 내에 다시 클릭되지 않으면 초기화
-                new Handler().postDelayed(() -> btnClickCount = 0, 500);
-                if (isOverThr) {
-                    new Handler().postDelayed(this::showNextPage, 500);
-                }
-            }
-        });
-
-        tvPoliceName.setOnClickListener(view ->{
-            Intent intent = new Intent(getApplicationContext(),NoticeActivity.class);
+            finish();
+            Intent intent = new Intent(getApplicationContext(),DecibelPageActivity.class);
+            intent.putExtra("pageIndex",1);
             startActivity(intent);
         });
     }

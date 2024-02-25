@@ -1,32 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
     android:layout_height="match_parent"
     android:background="@color/background_default"
+    android:orientation="vertical"
     tools:context=".ui.DeviceSelectActivity">
 
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/btn_home"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@drawable/ic_home" />
-
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-        <RelativeLayout
-            android:id="@+id/fragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="15dp"
-            android:gravity="center"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-    </LinearLayout>
-</LinearLayout>
+    <include
+        android:id="@+id/layout_btn"
+        layout="@layout/layout_page_button" />
+</FrameLayout>

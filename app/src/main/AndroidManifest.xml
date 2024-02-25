@@ -46,10 +46,14 @@
         <activity
             android:name=".ui.InputDecibelActivity"
             android:screenOrientation="landscape" />
+
         <activity
             android:name=".ui.DecibelPageActivity"
             android:screenOrientation="landscape" />
 
+        <activity
+            android:name=".ui.InputNoticeActivity"
+            android:screenOrientation="landscape" />
         <activity
             android:name=".ui.NoticeActivity"
             android:screenOrientation="landscape" />

@@ -4,6 +4,7 @@ import static hoon.mael.decibel.Utils.MessageUtils.disableNavigationBar;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -23,7 +24,8 @@ public class CalculateActivity extends AppCompatActivity {
     private EditText edtBgDecibel, edtMsDecibel;
     private TextView tvInterval, tvCorrection, tvCalResult, tvSum;
 
-    private double interval, correction, sum, result;
+    private double interval, correction, sum;
+    private int result;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,6 +52,7 @@ public class CalculateActivity extends AppCompatActivity {
                 return;
             }
             calValues();
+            hideKeyboard();
 
             tvInterval.setText(String.valueOf(interval));
             tvCorrection.setText(String.valueOf(correction));
@@ -59,6 +62,11 @@ public class CalculateActivity extends AppCompatActivity {
         binding.btnHome.setOnClickListener(view ->{
             finish();
         });
+    }
+
+    private void hideKeyboard(){
+        InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        manager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     private void calValues() {
@@ -72,8 +80,13 @@ public class CalculateActivity extends AppCompatActivity {
 
         interval = Math.round((measureDecibel - bgDecibel)*10)/10.0;
         correction = CalculateUtil.calculateCorrection(measureDecibel, bgDecibel);
-        sum = Math.round(measureDecibel + correction);
-        result = Math.round(sum);
+        sum = measureDecibel + correction;
+        result = (int) Math.round(sum);
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
     }
 
     private void initViews() {

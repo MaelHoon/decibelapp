@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import hoon.mael.decibel.Utils.MessageUtils;
+import hoon.mael.decibel.Utils.PageUtil;
 import hoon.mael.decibel.Utils.PrefUtils;
 import hoon.mael.decibel.databinding.ActivityInputDecibelBinding;
 
@@ -31,9 +32,6 @@ public class InputDecibelActivity extends AppCompatActivity {
         binding = ActivityInputDecibelBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        /*Intent intent = getIntent();
-        String instantDecibel = intent.getStringExtra("asd");
-        String averageDecibel = intent.getStringExtra("asd2");*/
 
         initComponent();
         initValue();
@@ -52,6 +50,15 @@ public class InputDecibelActivity extends AppCompatActivity {
     }
 
     private void initListener() {
+        binding.layoutBtn.btnNext.setOnClickListener(view ->{
+            finish();
+            PageUtil.startActivity(getApplicationContext(),DecibelIntroActivity.class);
+        });
+        binding.layoutBtn.btnPrev.setOnClickListener(view ->{
+            finish();
+            PageUtil.startActivity(getApplicationContext(),DeviceSelectActivity.class);
+        });
+
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

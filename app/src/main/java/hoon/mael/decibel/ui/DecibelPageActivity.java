@@ -22,6 +22,7 @@ import java.util.TimerTask;
 import hoon.mael.decibel.R;
 import hoon.mael.decibel.Utils.BluetoothStateUtil;
 import hoon.mael.decibel.Utils.CalculateUtil;
+import hoon.mael.decibel.Utils.PageUtil;
 import hoon.mael.decibel.Utils.PrefUtils;
 import hoon.mael.decibel.databinding.ActivityDecibelPageBinding;
 import hoon.mael.decibel.model.DecibelModel;
@@ -39,7 +40,6 @@ public class DecibelPageActivity extends AppCompatActivity {
 
     private View decibelPage01, decibelPage02, decibelPage03;
     private PrefUtils prefUtils;
-    private int btnClickCount = 0;
     private int pageIndex = 1;
     private Timer UIUpdateTimer;
     private boolean IsUIUpdateTimerRunning = false;
@@ -74,10 +74,17 @@ public class DecibelPageActivity extends AppCompatActivity {
         initComponent();
         initListener();
 
+        Intent intent = getIntent();
+        int pageIndex = intent.getIntExtra("pageIndex", 3);
+
+        if (pageIndex == 3) {
+            decibelPage01.setVisibility(View.GONE);
+            decibelPage02.setVisibility(View.GONE);
+            decibelPage03.setVisibility(View.VISIBLE);
+        }
+
         disableNavigationBar(this);
-
     }
-
 
     @Override
     protected void onResume() {
@@ -98,8 +105,8 @@ public class DecibelPageActivity extends AppCompatActivity {
         decibelPage02 = binding.layoutPageDecibel02.getRoot();
         decibelPage03 = binding.layoutPageDecibel03.getRoot();
 
-        btnPrev = binding.btnPrev;
-        btnNext = binding.btnNext;
+        btnPrev = binding.layoutBtn.btnPrev;
+        btnNext = binding.layoutBtn.btnNext;
 
         tvStdMaxDecibel = binding.layoutPageDecibel01.tvStdMaxDecibel;
         tvStdThrDecibel = binding.layoutPageDecibel01.tvStdThrDecibel;
@@ -204,7 +211,7 @@ public class DecibelPageActivity extends AppCompatActivity {
 
                 stopOverTask();
             }
-        }else{
+        } else {
             stopOverTask();
 
             setBackgroundDefault();
@@ -258,33 +265,11 @@ public class DecibelPageActivity extends AppCompatActivity {
 
     private void initListener() {
         btnPrev.setOnClickListener(view -> {
-            btnClickCount++;
-            if (btnClickCount == 2) {
-                btnClickCount = 0;  // 초기화
-
-                Intent intent = new Intent(getApplicationContext(), DecibelIntroActivity.class);
-                startActivity(intent);
-                finish();
-            } else {
-                // 첫 번째 클릭 후 500ms 내에 다시 클릭되지 않으면 초기화
-                new Handler().postDelayed(() -> btnClickCount = 0, 500);
-                new Handler().postDelayed(this::updateDecibelPagePrev, 500);
-            }
+            updateDecibelPagePrev();
         });
 
         btnNext.setOnClickListener(view -> {
-            btnClickCount++;
-            if (btnClickCount == 2) {
-                btnClickCount = 0;  // 초기화
-
-                Intent intent = new Intent(getApplicationContext(), DecibelIntroActivity.class);
-                startActivity(intent);
-                finish();
-            } else {
-                // 첫 번째 클릭 후 500ms 내에 다시 클릭되지 않으면 초기화
-                new Handler().postDelayed(() -> btnClickCount = 0, 500);
-                new Handler().postDelayed(this::updateDecibelPageNext, 500);
-            }
+            updateDecibelPageNext();
         });
     }
 
@@ -330,9 +315,18 @@ public class DecibelPageActivity extends AppCompatActivity {
 
     private void updateDecibelPagePrev() {
         switch (getDecibelPageIndex()) {
+            case 1:
+                finish();
+                PageUtil.startActivity(getApplicationContext(), DecibelIntroActivity.class);
             case 2:
                 decibelPage01.setVisibility(View.VISIBLE);
                 decibelPage02.setVisibility(View.GONE);
+                decibelPage03.setVisibility(View.GONE);
+                break;
+            case 3:
+                decibelPage01.setVisibility(View.GONE);
+                decibelPage02.setVisibility(View.VISIBLE);
+                decibelPage03.setVisibility(View.GONE);
                 break;
         }
         getDecibelPageIndex();
@@ -343,6 +337,16 @@ public class DecibelPageActivity extends AppCompatActivity {
             case 1:
                 decibelPage01.setVisibility(View.GONE);
                 decibelPage02.setVisibility(View.VISIBLE);
+                decibelPage03.setVisibility(View.GONE);
+                break;
+            case 2:
+                decibelPage01.setVisibility(View.GONE);
+                decibelPage02.setVisibility(View.GONE);
+                decibelPage03.setVisibility(View.VISIBLE);
+                break;
+            case 3:
+                finish();
+                PageUtil.startActivity(getApplicationContext(), NoticeActivity.class);
                 break;
         }
         getDecibelPageIndex();
@@ -351,13 +355,17 @@ public class DecibelPageActivity extends AppCompatActivity {
     private int getDecibelPageIndex() {
         boolean isDecibelPage01Visible = (decibelPage01.getVisibility() == View.VISIBLE);
         boolean isDecibelPage02Visible = (decibelPage02.getVisibility() == View.VISIBLE);
+        boolean isDecibelPage03Visible = (decibelPage03.getVisibility() == View.VISIBLE);
 
-        if (isDecibelPage01Visible && !isDecibelPage02Visible) {
+        if (isDecibelPage01Visible && !isDecibelPage02Visible && !isDecibelPage03Visible) {
             pageIndex = 1;
             return 1;
-        } else if (!isDecibelPage01Visible && isDecibelPage02Visible) {
+        } else if (!isDecibelPage01Visible && isDecibelPage02Visible && !isDecibelPage03Visible) {
             pageIndex = 2;
             return 2;
+        } else if (!isDecibelPage01Visible && !isDecibelPage02Visible && isDecibelPage03Visible) {
+            pageIndex = 3;
+            return 3;
         } else {
             pageIndex = 1;
             return 1;

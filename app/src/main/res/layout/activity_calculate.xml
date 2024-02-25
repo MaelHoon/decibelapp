@@ -6,161 +6,162 @@
     android:layout_height="match_parent"
     android:background="@color/textColor_default">
 
-    <FrameLayout
-        android:id="@+id/layout_cal_title"
-        android:layout_width="match_parent"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/btn_home"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/img_logo_police"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_cal_title"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="소음 측정 계산기"
+        android:textColor="@color/background_default"
+        android:textSize="30sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/tv_cal_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="집회시위 소음 측정 계산기"
-            android:layout_gravity="center"
-            android:textColor="@color/background_default"
-            android:textSize="37dp"
-            android:textStyle="bold" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/btn_home"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/ic_home" />
-    </FrameLayout>
+        app:layout_constraintTop_toBottomOf="@+id/btn_home" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
         android:orientation="vertical"
-        android:paddingVertical="20dp"
-        app:layout_constraintBottom_toTopOf="@id/view_cal_result"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout_cal_title">
+        app:layout_constraintTop_toBottomOf="@id/tv_cal_title">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="horizontal">
+            android:background="#E49DCC"
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:text="배경소음"
-                android:textColor="@color/background_default"
-                android:textSize="30sp"
-                android:textStyle="bold" />
+                android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/edt_BgDecibel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="배경소음"
+                    android:textColor="@color/background_default"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/edt_BgDecibel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_edt_outline"
+                    android:gravity="center"
+                    android:imeOptions="flagNoExtractUi|actionDone"
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/background_default"
+                    android:textSize="30sp"
+                    tools:text="60.4" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="3dp"
+                    android:layout_weight="0.5"
+                    android:gravity="center|left"
+                    android:inputType="numberDecimal"
+                    android:text="dB"
+                    android:textColor="@color/background_default"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_weight="1"
-                android:background="@drawable/bg_edt_outline"
-                android:gravity="center"
-                android:imeOptions="flagNoExtractUi|actionDone"
-                android:inputType="numberDecimal"
-                android:textColor="@color/background_default"
-                android:textSize="30sp"
-                tools:text="60.4" />
+                android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="3dp"
-                android:layout_weight="0.5"
-                android:gravity="center|left"
-                android:inputType="numberDecimal"
-                android:text="dB"
-                android:textColor="@color/background_default"
-                android:textSize="30sp"
-                android:textStyle="bold" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="측정소음"
+                    android:textColor="@color/background_default"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/edt_measureDecibel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_edt_outline"
+                    android:gravity="center"
+                    android:imeOptions="flagNoExtractUi|actionDone"
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/background_default"
+                    android:textSize="30sp"
+                    tools:text="68.5" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="3dp"
+                    android:layout_weight="0.5"
+                    android:gravity="center|left"
+                    android:text="dB"
+                    android:textColor="@color/background_default"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginVertical="10dp"
             android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="측정소음"
-                android:textColor="@color/background_default"
-                android:textSize="30sp"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/edt_measureDecibel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/bg_edt_outline"
-                android:gravity="center"
-                android:imeOptions="flagNoExtractUi|actionDone"
-                android:inputType="numberDecimal"
-                android:textColor="@color/background_default"
-                android:textSize="30sp"
-                tools:text="68.5" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="3dp"
-                android:layout_weight="0.5"
-                android:gravity="center|left"
-                android:text="dB"
-                android:textColor="@color/background_default"
-                android:textSize="30sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_weight="2"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/btn_cal"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginVertical="40dp"
+                android:layout_marginEnd="5dp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/btnColor01"
                 android:text="대상소음도 확인"
                 android:textColor="@color/background_default"
-                android:textSize="25dp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btn_init"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginVertical="40dp"
+                android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/btnColor02"
                 android:text="초기화"
                 android:textColor="@color/background_default"
-                android:textSize="25dp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -168,6 +169,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="3"
+            android:background="#A8C1EC"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -175,18 +177,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
-                android:layout_weight="1"
+                android:layout_marginBottom="30dp"
                 android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
 
                     <TextView
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
                         android:text="차이"
@@ -208,13 +209,12 @@
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1">
 
                     <TextView
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginVertical="10dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
                         android:text="보정치"
@@ -226,7 +226,6 @@
                         android:id="@+id/tv_correction"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginVertical="10dp"
                         android:layout_weight="1"
                         android:background="@drawable/bg_edt_outline"
                         android:gravity="center"
@@ -239,12 +238,11 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_weight="2"
                     android:gravity="center|start"
@@ -266,7 +264,7 @@
 
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="3dp"
                     android:layout_weight="0.5"
                     android:gravity="center|left"
@@ -276,48 +274,50 @@
                     android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/view_cal_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#A8C1EC"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:layout_marginBottom="10dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:text="대상소음도"
+                android:textColor="@color/background_default"
+                android:textSize="37dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_cal_result"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.6"
+                android:background="@drawable/bg_edt_outline"
+                android:gravity="center"
+                android:textColor="@color/background_default"
+                android:textSize="30sp"
+                tools:text="9.1" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="3dp"
+                android:layout_weight="0.5"
+                android:gravity="center|left"
+                android:text="dB"
+                android:textColor="@color/background_default"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+        </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/view_cal_result"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="35dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_weight="2"
-            android:gravity="center"
-            android:text="대상소음도"
-            android:textColor="@color/background_default"
-            android:textSize="37dp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tv_cal_result"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.6"
-            android:background="@drawable/bg_edt_outline"
-            android:gravity="center"
-            android:textColor="@color/background_default"
-            android:textSize="30sp"
-            tools:text="9.1" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="3dp"
-            android:layout_weight="0.5"
-            android:gravity="center|left"
-            android:text="dB"
-            android:textColor="@color/background_default"
-            android:textSize="30sp"
-            android:textStyle="bold" />
-    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
