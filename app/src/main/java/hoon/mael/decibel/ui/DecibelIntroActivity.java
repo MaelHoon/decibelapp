@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -40,6 +41,27 @@ public class DecibelIntroActivity extends AppCompatActivity {
 
     private long backKeyPressedTime = 0;// 마지막으로 뒤로 가기 버튼을 눌렀던 시간 저장
     private Toast toast;
+
+    private int TimerCount = 1;
+
+    private Handler TimerCountHandler = new Handler(
+            Looper.getMainLooper()
+    );
+    private Thread TimerCountRunnable = new Thread() {
+        @Override
+        public void run() {
+            if (!BluetoothStateUtil.getReceiveStatus() && BluetoothStateUtil.getToogle()) {
+                TimerCount++;
+                if (TimerCount >= 10) {
+                    TimerCount = 0;
+                    finish();
+                    PageUtil.startActivity(getApplicationContext(), DecibelPageActivity.class);
+                }
+            }
+            TimerCountHandler.removeCallbacks(TimerCountRunnable);
+            TimerCountHandler.postDelayed(this, 1000);
+        }
+    };
 
     private Handler UIRefreshTimerHandler = new Handler(
             Looper.getMainLooper()
@@ -79,6 +101,7 @@ public class DecibelIntroActivity extends AppCompatActivity {
         disableNavigationBar(this);
 
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -87,13 +110,19 @@ public class DecibelIntroActivity extends AppCompatActivity {
 
         UIRefreshTimerHandler.removeCallbacks(UIRefreshTimerRunnable);
         UIRefreshTimerHandler.post(UIRefreshTimerRunnable);
+
+        TimerCountHandler.removeCallbacks(TimerCountRunnable);
+        TimerCountHandler.post(TimerCountRunnable);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         UIRefreshTimerHandler.removeCallbacks(UIRefreshTimerRunnable);
+        TimerCountHandler.removeCallbacks(TimerCountRunnable);
+
     }
+
     @SuppressLint("ClickableViewAccessibility")
     private void initComponent() {
         standardMaxDecibel = prefUtils.getString("standardInput3");
@@ -116,12 +145,20 @@ public class DecibelIntroActivity extends AppCompatActivity {
     private void initListener() {
         btnPrev.setOnClickListener(view -> {
             finish();
-            PageUtil.startActivity(getApplicationContext(),InputDecibelActivity.class);
+            PageUtil.startActivity(getApplicationContext(), InputDecibelActivity.class);
         });
         btnNext.setOnClickListener(view -> {
             finish();
-            Intent intent = new Intent(getApplicationContext(),DecibelPageActivity.class);
-            intent.putExtra("pageIndex",1);
+            Intent intent = new Intent(getApplicationContext(), DecibelPageActivity.class);
+            intent.putExtra("pageIndex", 1);
+
+            startActivity(intent);
+        });
+        tvPoliceName.setOnClickListener(view -> {
+            PageUtil.startActivity(getApplicationContext(), NoticeActivity.class);
+            Intent intent = new Intent(getApplicationContext(), NoticeActivity.class);
+            intent.putExtra("pageIndex", 5);
+
             startActivity(intent);
         });
     }
@@ -130,13 +167,13 @@ public class DecibelIntroActivity extends AppCompatActivity {
         currentDecibel = DecibelModel.getCurrentDecibel();
         averageDecibel = DecibelModel.getAverageDecibel();
 
-        if(BluetoothStateUtil.getReceiveStatus()) {
+        if (BluetoothStateUtil.getReceiveStatus()) {
             if (isStandardOver(currentDecibel, standardMaxDecibel)) {
                 showThrOverPage(pageIndex);
             } else {
                 hideThrOverPage();
             }
-        }else{
+        } else {
             hideThrOverPage();
         }
     }
@@ -159,7 +196,7 @@ public class DecibelIntroActivity extends AppCompatActivity {
     }
 
     private void hideThrOverPage() {
-        ivIntroBackground.setImageResource( R.drawable.img_decibel_intro_backgroud);
+        ivIntroBackground.setImageResource(R.drawable.img_decibel_intro_backgroud);
     }
 
     private void showNextPage() {

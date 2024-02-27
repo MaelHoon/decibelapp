@@ -339,6 +339,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
                         remainingSeconds = nthData % 60;
 
                         BluetoothStateUtil.setIsReceiveStarted(true);
+                        BluetoothStateUtil.setToogle(false);
                     } else {
                         if (words[0].contains("Q")) {
                             String timeString = String.format("%02d:%02d:%02d", hours, minutes, remainingSeconds);
@@ -347,6 +348,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
                             String endReceiveString = currentTime + " Runtime " + timeString;
                             Log.d("마엘", endReceiveString);
 
+                            BluetoothStateUtil.setToogle(true);
                             BluetoothStateUtil.setIsReceiveStarted(false);
                             BluetoothStateUtil.setReceiveEndString(endReceiveString);
                         }

@@ -46,7 +46,9 @@ public class DeviceSelectActivity extends AppCompatActivity implements FragmentM
         });
         binding.layoutBtn.btnPrev.setOnClickListener(view ->{
             finish();
-            PageUtil.startActivity(getApplicationContext(),MainActivity.class);
+            Intent intent = new Intent(getApplicationContext(),NoticeActivity.class);
+            intent.putExtra("pageIndex",3);
+            startActivity(intent);
         });
     }
 

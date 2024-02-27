@@ -50,6 +50,8 @@ public class DecibelPageActivity extends AppCompatActivity {
     private long backKeyPressedTime = 0;// 마지막으로 뒤로 가기 버튼을 눌렀던 시간 저장
     private Toast toast;
 
+    private int TimerCount = 1;
+
     private Handler UIRefreshTimerHandler = new Handler(
             Looper.getMainLooper()
     );
@@ -57,8 +59,28 @@ public class DecibelPageActivity extends AppCompatActivity {
         @Override
         public void run() {
             initValue();
+
             UIRefreshTimerHandler.removeCallbacks(UIRefreshTimerRunnable);
             UIRefreshTimerHandler.post(this);
+        }
+    };
+    private Handler TimerCountHandler = new Handler(
+            Looper.getMainLooper()
+    );
+    private Thread TimerCountRunnable = new Thread() {
+        @Override
+        public void run() {
+            if (!BluetoothStateUtil.getReceiveStatus() && !(decibelPage02.getVisibility() == View.VISIBLE) && !BluetoothStateUtil.getToogle()) {
+                TimerCount++;
+                if (TimerCount >= 10) {
+                    TimerCount = 0;
+                    decibelPage01.setVisibility(View.VISIBLE);
+                    decibelPage02.setVisibility(View.GONE);
+                    decibelPage03.setVisibility(View.GONE);
+                }
+            }
+            TimerCountHandler.removeCallbacks(TimerCountRunnable);
+            TimerCountHandler.postDelayed(this, 1000);
         }
     };
 
@@ -92,12 +114,17 @@ public class DecibelPageActivity extends AppCompatActivity {
 
         UIRefreshTimerHandler.removeCallbacks(UIRefreshTimerRunnable);
         UIRefreshTimerHandler.post(UIRefreshTimerRunnable);
+
+        TimerCountHandler.removeCallbacks(TimerCountRunnable);
+        TimerCountHandler.post(TimerCountRunnable);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
         UIRefreshTimerHandler.removeCallbacks(UIRefreshTimerRunnable);
+        TimerCountHandler.removeCallbacks(TimerCountRunnable);
     }
 
     private void initComponent() {
@@ -158,6 +185,13 @@ public class DecibelPageActivity extends AppCompatActivity {
 
             tvReceiveEndString01.setText(BluetoothStateUtil.getReceiveEndString());
             tvReceiveEndString02.setText(BluetoothStateUtil.getReceiveEndString());
+
+            if(BluetoothStateUtil.getToogle()) {
+                decibelPage01.setVisibility(View.GONE);
+                decibelPage02.setVisibility(View.VISIBLE);
+                decibelPage03.setVisibility(View.GONE);
+                BluetoothStateUtil.setToogle(false);
+            }
         } else {
             tvReceiveEndString01.setVisibility(View.GONE);
             tvReceiveEndString02.setVisibility(View.GONE);
@@ -168,8 +202,17 @@ public class DecibelPageActivity extends AppCompatActivity {
         }
 
         try { //기기 데시벨 측정 시작시 Leq값 수신 방지
-            if (Double.parseDouble(currentDecibel) > Double.parseDouble(standardMaxDecibel)) {
-                tvCurrentDecibelResultEval.setText("초과");
+            currentDecibel = "52.1";
+            averageDecibel = "53.2";
+            double correctionDecibelValue = CalculateUtil.calculateCorrection((Double.parseDouble(averageDecibel)), Double.parseDouble(standardBackgroundDecibel));
+
+            int currentDecibelRound = (int) (Math.round(Double.parseDouble(currentDecibel)));
+            int AverageDecibelRound = (int) (Math.round((Double.parseDouble(averageDecibel)) - correctionDecibelValue));
+
+            if (currentDecibelRound > Integer.parseInt(standardMaxDecibel)) {
+                String text = String.valueOf(currentDecibelRound - Integer.parseInt(standardMaxDecibel));
+
+                tvCurrentDecibelResultEval.setText(text + "dBA초과");
                 tvCurrentDecibelResultEval.setTextColor(getResources().getColor(R.color.colorWarning));
             } else {
                 tvCurrentDecibelResultEval.setText("준수");
@@ -183,19 +226,15 @@ public class DecibelPageActivity extends AppCompatActivity {
                 tvStandardDecibelResultEval.setText("준수");
                 tvStandardDecibelResultEval.setTextColor(getResources().getColor(R.color.btnColor01));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            Double correctionDecibelValue = CalculateUtil.calculateCorrection((Double.parseDouble(averageDecibel)), Double.parseDouble(standardBackgroundDecibel));
-
-            int currentDecibelRound = (int) (Math.round(Double.parseDouble(currentDecibel)));
-            int AverageDecibelRound = (int) (Math.round((Double.parseDouble(averageDecibel)) - correctionDecibelValue));
 
             tvCurrentDecibel.setText(currentDecibel);
-            tvCurrentDecibel2.setText(currentDecibel);
-            tvAverageDecibel2.setText(averageDecibel);
+            if (Integer.parseInt(tvCurrentDecibel2.getText().toString()) <= currentDecibelRound) {
+                tvCurrentDecibel2.setText(String.valueOf(currentDecibelRound));
+            } else if (tvCurrentDecibel2.getText().equals("0")) {
+                tvCurrentDecibel2.setText(String.valueOf(currentDecibelRound));
+            }
+
+            tvAverageDecibel2.setText(String.valueOf(AverageDecibelRound));
             tvCurrentDecibel3.setText(String.valueOf(currentDecibelRound));
             tvAverageDecibel3.setText(String.valueOf(AverageDecibelRound));
         } catch (Exception e) {
