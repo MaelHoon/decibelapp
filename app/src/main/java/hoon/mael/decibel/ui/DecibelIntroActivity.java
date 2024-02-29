@@ -43,7 +43,7 @@ public class DecibelIntroActivity extends AppCompatActivity {
     private long backKeyPressedTime = 0;// 마지막으로 뒤로 가기 버튼을 눌렀던 시간 저장
     private Toast toast;
 
-    private int TimerCount = 1;
+    private int TimerCount = 0;
 
     private Handler TimerCountHandler = new Handler(
             Looper.getMainLooper()
@@ -100,7 +100,7 @@ public class DecibelIntroActivity extends AppCompatActivity {
         initComponent();
 
         TimerCountHandler.removeCallbacks(TimerCountRunnable);
-        TimerCountHandler.post(TimerCountRunnable);
+        TimerCountHandler.postDelayed(TimerCountRunnable,1000);
     }
 
     @Override

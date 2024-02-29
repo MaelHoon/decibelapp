@@ -26,7 +26,7 @@ public class InputNoticeActivity extends AppCompatActivity {
     private EditText edtNoticeTitle, edtNoticeContent;
     private TextView tvPoliceName;
 
-    private int TimerCount = 1;
+    private int TimerCount = 0;
 
     private Handler TimerCountHandler = new Handler(
             Looper.getMainLooper()
@@ -81,7 +81,7 @@ public class InputNoticeActivity extends AppCompatActivity {
         super.onResume();
 
         TimerCountHandler.removeCallbacks(TimerCountRunnable);
-        TimerCountHandler.post(TimerCountRunnable);
+        TimerCountHandler.postDelayed(TimerCountRunnable,1000);
     }
 
     @Override

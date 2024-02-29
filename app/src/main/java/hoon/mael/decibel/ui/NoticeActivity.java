@@ -34,7 +34,7 @@ public class NoticeActivity extends AppCompatActivity {
 
     private int PageIndex = 1;
 
-    private int TimerCount = 1;
+    private int TimerCount = 0;
 
     private Handler UIRefreshTimerHandler = new Handler(
             Looper.getMainLooper()
@@ -111,7 +111,7 @@ public class NoticeActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         TimerCountHandler.removeCallbacks(TimerCountRunnable);
-        TimerCountHandler.post(TimerCountRunnable);
+        TimerCountHandler.postDelayed(TimerCountRunnable,1000);
 
         UIRefreshTimerHandler.removeCallbacks(UIRefreshTimerRunnable);
         UIRefreshTimerHandler.post(UIRefreshTimerRunnable);

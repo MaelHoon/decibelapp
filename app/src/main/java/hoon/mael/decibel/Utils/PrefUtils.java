@@ -25,7 +25,11 @@ public class PrefUtils {
     }
 
     public String getString(String key) {
-        return preferences.getString(key, "");
+        return preferences.getString(key, "0");
+    }
+
+    public String getPoliceName(String key){
+        return preferences.getString(key,"영등포");
     }
 
     public void setHighestDecibel(String value) {

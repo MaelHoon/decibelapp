@@ -51,7 +51,7 @@ public class DecibelPageActivity extends AppCompatActivity {
     private long backKeyPressedTime = 0;// 마지막으로 뒤로 가기 버튼을 눌렀던 시간 저장
     private Toast toast;
 
-    private int TimerCount = 1;
+    private int TimerCount = 0;
 
     private Handler UIRefreshTimerHandler = new Handler(
             Looper.getMainLooper()
@@ -71,7 +71,7 @@ public class DecibelPageActivity extends AppCompatActivity {
     private Thread TimerCountRunnable = new Thread() {
         @Override
         public void run() {
-            if (BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_STOP) {
+            if (BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_STOP && !(decibelPage02.getVisibility() == View.VISIBLE)) {
                 TimerCount++;
                 if (TimerCount >= PAGE_CHANGE_INTERVAL) {
                     TimerCount = 0;
@@ -127,7 +127,7 @@ public class DecibelPageActivity extends AppCompatActivity {
         UIRefreshTimerHandler.post(UIRefreshTimerRunnable);
 
         TimerCountHandler.removeCallbacks(TimerCountRunnable);
-        TimerCountHandler.post(TimerCountRunnable);
+        TimerCountHandler.postDelayed(TimerCountRunnable,1000);
     }
 
     @Override
@@ -188,32 +188,6 @@ public class DecibelPageActivity extends AppCompatActivity {
         currentDecibel = DecibelModel.getCurrentDecibel();
         averageDecibel = DecibelModel.getAverageDecibel();
 
-        if (BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_STOP) {
-            tvReceiveEndString01.setVisibility(View.VISIBLE);
-            tvReceiveEndString02.setVisibility(View.VISIBLE);
-
-            tvReceiveEndString01.setText(BluetoothStateUtil.getReceiveEndString());
-            tvReceiveEndString02.setText(BluetoothStateUtil.getReceiveEndString());
-
-            if (BluetoothStateUtil.getToogle()) {
-                decibelPage01.setVisibility(View.GONE);
-                decibelPage02.setVisibility(View.VISIBLE);
-                decibelPage03.setVisibility(View.GONE);
-
-                BluetoothStateUtil.setToogle(false);
-            }
-        } else {
-            if (tvReceiveEndString01.getVisibility() == View.VISIBLE) {
-                tvReceiveEndString01.setVisibility(View.GONE);
-                tvReceiveEndString02.setVisibility(View.GONE);
-
-                tvCurrentDecibel2.setText("0");
-                tvAverageDecibel2.setText("0");
-
-                prefUtils.reSetHighestDecibel();
-            }
-        }
-
         if (currentDecibel == null || averageDecibel == null) {
             return;
         }
@@ -234,8 +208,10 @@ public class DecibelPageActivity extends AppCompatActivity {
                 tvCurrentDecibelResultEval.setTextColor(getResources().getColor(R.color.btnColor01));
             }
 
-            if (Double.parseDouble(averageDecibel) > Double.parseDouble(standardThrDecibel)) {
-                tvStandardDecibelResultEval.setText("초과");
+            if (AverageDecibelRound > Double.parseDouble(standardThrDecibel)) {
+                String text = String.valueOf(AverageDecibelRound - Integer.parseInt(standardThrDecibel));
+
+                tvStandardDecibelResultEval.setText(text+"dBA초과");
                 tvStandardDecibelResultEval.setTextColor(getResources().getColor(R.color.colorWarning));
             } else {
                 tvStandardDecibelResultEval.setText("준수");
@@ -277,6 +253,32 @@ public class DecibelPageActivity extends AppCompatActivity {
 
         if (binding.layoutPageDecibel03.getRoot().getVisibility() == View.VISIBLE) {
             setBackgroundDefault();
+        }
+
+        if (BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_STOP) {
+            tvReceiveEndString01.setVisibility(View.VISIBLE);
+            tvReceiveEndString02.setVisibility(View.VISIBLE);
+
+            tvReceiveEndString01.setText(BluetoothStateUtil.getReceiveEndString());
+            tvReceiveEndString02.setText(BluetoothStateUtil.getReceiveEndString());
+
+            if (BluetoothStateUtil.getToogle()) {
+                decibelPage01.setVisibility(View.GONE);
+                decibelPage02.setVisibility(View.VISIBLE);
+                decibelPage03.setVisibility(View.GONE);
+
+                BluetoothStateUtil.setToogle(false);
+            }
+        } else {
+            if (tvReceiveEndString01.getVisibility() == View.VISIBLE) {
+                tvReceiveEndString01.setVisibility(View.GONE);
+                tvReceiveEndString02.setVisibility(View.GONE);
+
+                tvCurrentDecibel2.setText("0");
+                tvAverageDecibel2.setText("0");
+
+                prefUtils.reSetHighestDecibel();
+            }
         }
     }
 

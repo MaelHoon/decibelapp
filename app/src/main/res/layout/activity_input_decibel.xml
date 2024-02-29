@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingVertical="10dp"
     android:background="@color/background_default"
     android:gravity="center"
     android:orientation="vertical">
@@ -15,12 +16,11 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:gravity="center"
             android:maxLines="1"
             android:text="소음기준 정보 입력"
             android:textColor="@color/textColor_default"
-            android:textSize="60sp"
+            android:textSize="50sp"
             android:textStyle="bold" />
 
         <LinearLayout
@@ -211,17 +211,6 @@
             </LinearLayout>
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_confirm"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="300dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="20dp"
-            android:layout_weight="0.1"
-            android:text="확인"
-            android:textSize="20dp"
-            android:textStyle="bold" />
     </LinearLayout>
 
     <include
