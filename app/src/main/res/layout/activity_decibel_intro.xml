@@ -22,6 +22,7 @@
         layout="@layout/layout_page_button" />
 
     <LinearLayout
+        android:id="@+id/layout_police_content"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_gravity="bottom"

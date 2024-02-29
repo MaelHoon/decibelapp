@@ -1,5 +1,6 @@
 package hoon.mael.decibel.ui;
 
+import static hoon.mael.decibel.Constants.PAGE_CHANGE_INTERVAL;
 import static hoon.mael.decibel.Utils.MessageUtils.disableNavigationBar;
 
 import android.content.Intent;
@@ -31,9 +32,9 @@ public class DecibelPageActivity extends AppCompatActivity {
 
     private ActivityDecibelPageBinding binding;
     private Button btnPrev, btnNext;
-    private TextView tvStdMaxDecibel, tvStdThrDecibel, tvCurrentDecibel, tvPoliceName1;
-    private TextView tvCurrentDecibel2, tvAverageDecibel2, tvPoliceName2;
-    private TextView tvCurrentDecibel3, tvAverageDecibel3, tvPoliceName3;
+    private TextView tvStdMaxDecibel, tvStdThrDecibel, tvCurrentDecibel, tvPoliceName;
+    private TextView tvCurrentDecibel2, tvAverageDecibel2;
+    private TextView tvCurrentDecibel3, tvAverageDecibel3;
     private TextView tvStandardThrDecibel, tvStandardMaxDecibel;
     private TextView tvCurrentDecibelResultEval, tvStandardDecibelResultEval;
     private TextView tvReceiveEndString02, tvReceiveEndString01;
@@ -70,12 +71,12 @@ public class DecibelPageActivity extends AppCompatActivity {
     private Thread TimerCountRunnable = new Thread() {
         @Override
         public void run() {
-            if (!BluetoothStateUtil.getReceiveStatus() && !(decibelPage02.getVisibility() == View.VISIBLE) && !BluetoothStateUtil.getToogle()) {
+            if (BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_STOP) {
                 TimerCount++;
-                if (TimerCount >= 10) {
+                if (TimerCount >= PAGE_CHANGE_INTERVAL) {
                     TimerCount = 0;
-                    decibelPage01.setVisibility(View.VISIBLE);
-                    decibelPage02.setVisibility(View.GONE);
+                    decibelPage01.setVisibility(View.GONE);
+                    decibelPage02.setVisibility(View.VISIBLE);
                     decibelPage03.setVisibility(View.GONE);
                 }
             }
@@ -99,10 +100,20 @@ public class DecibelPageActivity extends AppCompatActivity {
         Intent intent = getIntent();
         int pageIndex = intent.getIntExtra("pageIndex", 3);
 
-        if (pageIndex == 3) {
-            decibelPage01.setVisibility(View.GONE);
-            decibelPage02.setVisibility(View.GONE);
-            decibelPage03.setVisibility(View.VISIBLE);
+        switch (pageIndex) {
+            case 3:
+                decibelPage01.setVisibility(View.GONE);
+                decibelPage02.setVisibility(View.GONE);
+                decibelPage03.setVisibility(View.VISIBLE);
+                break;
+            case 2:
+                decibelPage01.setVisibility(View.GONE);
+                decibelPage02.setVisibility(View.VISIBLE);
+                decibelPage03.setVisibility(View.GONE);
+
+                tvReceiveEndString01.setVisibility(View.VISIBLE);
+                tvReceiveEndString02.setVisibility(View.VISIBLE);
+                break;
         }
 
         disableNavigationBar(this);
@@ -139,9 +150,7 @@ public class DecibelPageActivity extends AppCompatActivity {
         tvStdThrDecibel = binding.layoutPageDecibel01.tvStdThrDecibel;
         tvCurrentDecibel = binding.layoutPageDecibel01.tvCurrentDecibel;
 
-        tvPoliceName1 = binding.layoutPageDecibel01.tvPoliceName;
-        tvPoliceName2 = binding.layoutPageDecibel02.tvPoliceName;
-        tvPoliceName3 = binding.layoutPageDecibel03.tvPoliceName;
+        tvPoliceName = binding.tvPoliceName;
 
         tvReceiveEndString01 = binding.layoutPageDecibel01.tvReceiveEndString01;
 
@@ -165,36 +174,44 @@ public class DecibelPageActivity extends AppCompatActivity {
         binding.layoutPageDecibel03.tvStandardMaxDecibel2.setText(standardMaxDecibel);
         binding.layoutPageDecibel03.tvStandardThrDecibel2.setText(standardThrDecibel);
 
-        tvPoliceName1.setText(policeName);
-        tvPoliceName2.setText(policeName);
-        tvPoliceName3.setText(policeName);
+        tvPoliceName.setText(policeName);
 
         tvStandardMaxDecibel.setText(standardMaxDecibel);
         tvStandardThrDecibel.setText(standardThrDecibel);
         tvStdMaxDecibel.setText(standardMaxDecibel);
         tvStdThrDecibel.setText(standardThrDecibel);
+
+        tvCurrentDecibel2.setText(prefUtils.getHighestDecibel());
     }
 
     private void initValue() {
         currentDecibel = DecibelModel.getCurrentDecibel();
         averageDecibel = DecibelModel.getAverageDecibel();
 
-        if (!BluetoothStateUtil.getReceiveStatus()) {
+        if (BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_STOP) {
             tvReceiveEndString01.setVisibility(View.VISIBLE);
             tvReceiveEndString02.setVisibility(View.VISIBLE);
 
             tvReceiveEndString01.setText(BluetoothStateUtil.getReceiveEndString());
             tvReceiveEndString02.setText(BluetoothStateUtil.getReceiveEndString());
 
-            if(BluetoothStateUtil.getToogle()) {
+            if (BluetoothStateUtil.getToogle()) {
                 decibelPage01.setVisibility(View.GONE);
                 decibelPage02.setVisibility(View.VISIBLE);
                 decibelPage03.setVisibility(View.GONE);
+
                 BluetoothStateUtil.setToogle(false);
             }
         } else {
-            tvReceiveEndString01.setVisibility(View.GONE);
-            tvReceiveEndString02.setVisibility(View.GONE);
+            if (tvReceiveEndString01.getVisibility() == View.VISIBLE) {
+                tvReceiveEndString01.setVisibility(View.GONE);
+                tvReceiveEndString02.setVisibility(View.GONE);
+
+                tvCurrentDecibel2.setText("0");
+                tvAverageDecibel2.setText("0");
+
+                prefUtils.reSetHighestDecibel();
+            }
         }
 
         if (currentDecibel == null || averageDecibel == null) {
@@ -202,12 +219,10 @@ public class DecibelPageActivity extends AppCompatActivity {
         }
 
         try { //기기 데시벨 측정 시작시 Leq값 수신 방지
-            currentDecibel = "52.1";
-            averageDecibel = "53.2";
             double correctionDecibelValue = CalculateUtil.calculateCorrection((Double.parseDouble(averageDecibel)), Double.parseDouble(standardBackgroundDecibel));
 
             int currentDecibelRound = (int) (Math.round(Double.parseDouble(currentDecibel)));
-            int AverageDecibelRound = (int) (Math.round((Double.parseDouble(averageDecibel)) - correctionDecibelValue));
+            int AverageDecibelRound = (int) (Math.round((Double.parseDouble(averageDecibel)) + correctionDecibelValue));
 
             if (currentDecibelRound > Integer.parseInt(standardMaxDecibel)) {
                 String text = String.valueOf(currentDecibelRound - Integer.parseInt(standardMaxDecibel));
@@ -230,16 +245,20 @@ public class DecibelPageActivity extends AppCompatActivity {
             tvCurrentDecibel.setText(currentDecibel);
             if (Integer.parseInt(tvCurrentDecibel2.getText().toString()) <= currentDecibelRound) {
                 tvCurrentDecibel2.setText(String.valueOf(currentDecibelRound));
+
+                prefUtils.setHighestDecibel(String.valueOf(currentDecibelRound));
             } else if (tvCurrentDecibel2.getText().equals("0")) {
                 tvCurrentDecibel2.setText(String.valueOf(currentDecibelRound));
             }
 
             tvAverageDecibel2.setText(String.valueOf(AverageDecibelRound));
+
             tvCurrentDecibel3.setText(String.valueOf(currentDecibelRound));
             tvAverageDecibel3.setText(String.valueOf(AverageDecibelRound));
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         if (BluetoothStateUtil.getReceiveStatus()) {
             if (isStandardOver(currentDecibel, standardMaxDecibel)) {
                 setBackgroundWarning();
@@ -254,15 +273,20 @@ public class DecibelPageActivity extends AppCompatActivity {
             stopOverTask();
 
             setBackgroundDefault();
-            showCurrentPage();
+        }
+
+        if (binding.layoutPageDecibel03.getRoot().getVisibility() == View.VISIBLE) {
+            setBackgroundDefault();
         }
     }
 
     private void setBackgroundWarning() {
         int color = ContextCompat.getColor(getApplicationContext(), R.color.colorWarning);
         ColorDrawable colorDrawable = new ColorDrawable(color);
+
         binding.layoutPageDecibel01.getRoot().setBackground(colorDrawable);
         binding.layoutPageDecibel02.getRoot().setBackground(colorDrawable);
+        binding.layoutDecibelPageRoot.setBackground(colorDrawable);
     }
 
     private void setBackgroundDefault() {
@@ -270,6 +294,7 @@ public class DecibelPageActivity extends AppCompatActivity {
         ColorDrawable colorDrawable = new ColorDrawable(color);
         binding.layoutPageDecibel01.getRoot().setBackground(colorDrawable);
         binding.layoutPageDecibel02.getRoot().setBackground(colorDrawable);
+        binding.layoutDecibelPageRoot.setBackground(colorDrawable);
     }
 
     private void showCurrentPage() {
@@ -283,6 +308,11 @@ public class DecibelPageActivity extends AppCompatActivity {
                 decibelPage01.setVisibility(View.GONE);
                 decibelPage02.setVisibility(View.VISIBLE);
                 decibelPage03.setVisibility(View.GONE);
+                break;
+            case 3:
+                decibelPage01.setVisibility(View.GONE);
+                decibelPage02.setVisibility(View.GONE);
+                decibelPage03.setVisibility(View.VISIBLE);
                 break;
         }
     }
@@ -309,6 +339,9 @@ public class DecibelPageActivity extends AppCompatActivity {
 
         btnNext.setOnClickListener(view -> {
             updateDecibelPageNext();
+        });
+        binding.layoutPoliceContent.setOnClickListener(view -> {
+            PageUtil.startActivity(getApplicationContext(), InputNoticeActivity.class);
         });
     }
 

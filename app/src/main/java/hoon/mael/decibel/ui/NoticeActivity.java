@@ -1,5 +1,7 @@
 package hoon.mael.decibel.ui;
 
+import static hoon.mael.decibel.Constants.PAGE_CHANGE_INTERVAL;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,14 +29,25 @@ public class NoticeActivity extends AppCompatActivity {
     private ImageView ivIntroBackground;
     private Button btnNext, btnPrev;
     private TextView tvPoliceName;
-    private EditText edtNoticeTitle, edtNoticeContent;
 
-    private View inputNoticePage;
     private PrefUtils prefUtils;
 
     private int PageIndex = 1;
 
     private int TimerCount = 1;
+
+    private Handler UIRefreshTimerHandler = new Handler(
+            Looper.getMainLooper()
+    );
+    private Thread UIRefreshTimerRunnable = new Thread() {
+        @Override
+        public void run() {
+            initValue();
+
+            UIRefreshTimerHandler.removeCallbacks(UIRefreshTimerRunnable);
+            UIRefreshTimerHandler.post(this);
+        }
+    };
 
     private Handler TimerCountHandler = new Handler(
             Looper.getMainLooper()
@@ -42,13 +55,13 @@ public class NoticeActivity extends AppCompatActivity {
     private Thread TimerCountRunnable = new Thread() {
         @Override
         public void run() {
-            if (!BluetoothStateUtil.getReceiveStatus() && BluetoothStateUtil.getToogle()) {
+            if (BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_STOP) {
                 TimerCount++;
-                if (TimerCount >= 10) {
+                if (TimerCount >= PAGE_CHANGE_INTERVAL) {
                     TimerCount = 0;
                     finish();
                     Intent intent = new Intent(getApplicationContext(), DecibelPageActivity.class);
-                    intent.putExtra("pageIndex", 1);
+                    intent.putExtra("pageIndex", 2);
                     startActivity(intent);
                 }
             }
@@ -77,9 +90,20 @@ public class NoticeActivity extends AppCompatActivity {
             case 3:
                 showPage(3);
                 break;
-            case 5:
-                showPage(5);
+            case 4:
+                showPage(4);
                 break;
+        }
+    }
+
+    private void initValue() {
+        if (BluetoothStateUtil.getToogle()) {
+            Intent intent = new Intent(getApplicationContext(),DecibelPageActivity.class);
+            intent.putExtra("pageIndex",2);
+            startActivity(intent);
+            finish();
+
+            BluetoothStateUtil.setToogle(false);
         }
     }
 
@@ -88,13 +112,16 @@ public class NoticeActivity extends AppCompatActivity {
         super.onResume();
         TimerCountHandler.removeCallbacks(TimerCountRunnable);
         TimerCountHandler.post(TimerCountRunnable);
+
+        UIRefreshTimerHandler.removeCallbacks(UIRefreshTimerRunnable);
+        UIRefreshTimerHandler.post(UIRefreshTimerRunnable);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         TimerCountHandler.removeCallbacks(TimerCountRunnable);
-
+        UIRefreshTimerHandler.removeCallbacks(UIRefreshTimerRunnable);
     }
 
     @Override
@@ -104,73 +131,33 @@ public class NoticeActivity extends AppCompatActivity {
 
     private void initViews() {
         String policeName = prefUtils.getString("standardInput4") + "경찰서장";
-        String noticeTitle = prefUtils.getString(PrefUtils.NOTICE_TITLE_KEY);
-        String noticeContent = prefUtils.getString(PrefUtils.NOTICE_CONTENT_KEY);
-
         tvPoliceName.setText(policeName);
-        edtNoticeTitle.setText(noticeTitle);
-        edtNoticeContent.setText(noticeContent);
     }
 
     private void initListener() {
         btnNext.setOnClickListener(view -> {
+
             showNextPage();
         });
         btnPrev.setOnClickListener(view -> {
+
             showPrevPage();
         });
-        tvPoliceName.setOnClickListener(view -> {
-            ivIntroBackground.setVisibility(View.INVISIBLE);
-            inputNoticePage.setVisibility(View.VISIBLE);
-            PageIndex = 5;
-        });
-        edtNoticeTitle.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                prefUtils.saveString(PrefUtils.NOTICE_TITLE_KEY, edtNoticeTitle.getText().toString());
-            }
-        });
-        edtNoticeContent.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                prefUtils.saveString(PrefUtils.NOTICE_CONTENT_KEY, edtNoticeContent.getText().toString());
-            }
+        binding.layoutPoliceContent.setOnClickListener(view -> {
+            PageUtil.startActivity(getApplicationContext(),InputNoticeActivity.class);
         });
     }
 
     private void initBinding() {
-        inputNoticePage = binding.layoutInputNotice.getRoot();
-
         ivIntroBackground = binding.ivIntroBackground;
         btnNext = binding.layoutBtn.btnNext;
         btnPrev = binding.layoutBtn.btnPrev;
 
         tvPoliceName = binding.tvPoliceName;
-        edtNoticeTitle = binding.layoutInputNotice.edtNoticeTitle;
-        edtNoticeContent = binding.layoutInputNotice.edtNoticeContent;
     }
 
     private void showNextPage() {
-        if (PageIndex >= 6) {
+        if (PageIndex >= 5) {
             return;
         }
         PageIndex++;
@@ -193,35 +180,26 @@ public class NoticeActivity extends AppCompatActivity {
             case 1:
                 ivIntroBackground.setImageResource(R.drawable.img_decibel_intro_over_backgroud01);
                 ivIntroBackground.setVisibility(View.VISIBLE);
-                inputNoticePage.setVisibility(View.GONE);
                 PageIndex = 1;
                 break;
             case 2:
                 ivIntroBackground.setImageResource(R.drawable.img_decibel_intro_over_backgroud02);
                 ivIntroBackground.setVisibility(View.VISIBLE);
-                inputNoticePage.setVisibility(View.GONE);
                 PageIndex = 2;
                 break;
             case 3:
                 ivIntroBackground.setImageResource(R.drawable.img_decibel_intro_over_backgroud03);
                 ivIntroBackground.setVisibility(View.VISIBLE);
-                inputNoticePage.setVisibility(View.GONE);
                 PageIndex = 3;
                 break;
             case 4:
                 ivIntroBackground.setImageResource(R.drawable.img_decibel_intro_over_backgroud04);
                 ivIntroBackground.setVisibility(View.VISIBLE);
-                inputNoticePage.setVisibility(View.GONE);
                 PageIndex = 4;
                 break;
             case 5:
-                ivIntroBackground.setVisibility(View.INVISIBLE);
-                inputNoticePage.setVisibility(View.VISIBLE);
-                PageIndex = 5;
-                break;
-            case 6:
                 finish();
-                PageUtil.startActivity(getApplicationContext(), InputDecibelActivity.class);
+                PageUtil.startActivity(getApplicationContext(), DeviceSelectActivity.class);
                 break;
         }
     }

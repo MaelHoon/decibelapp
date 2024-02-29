@@ -9,36 +9,23 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <FrameLayout
+        <ImageView
+            android:id="@+id/iv_intro_background"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="10">
-            <include
-                android:id="@+id/layout_input_notice"
-                layout="@layout/activity_input_notice"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="10"
-                android:visibility="invisible" />
-
-            <ImageView
-                android:id="@+id/iv_intro_background"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="6"
-                android:cropToPadding="false"
-                android:scaleType="fitXY"
-                android:src="@drawable/img_decibel_intro_over_backgroud01"
-                android:text="집회 소음 측정 중" />
-
-        </FrameLayout>
+            android:layout_weight="10"
+            android:cropToPadding="false"
+            android:scaleType="fitXY"
+            android:src="@drawable/img_decibel_intro_over_backgroud01"
+            android:text="집회 소음 측정 중" />
 
         <LinearLayout
-            android:background="@color/textColor_default"
+            android:id="@+id/layout_police_content"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_gravity="bottom"
             android:layout_weight="1"
+            android:background="@color/textColor_default"
             android:gravity="center"
             android:orientation="horizontal">
 

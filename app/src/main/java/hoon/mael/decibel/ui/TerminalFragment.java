@@ -329,19 +329,22 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
                 if (str.toString().contains("\n\r")) {
                     String str1 = String.valueOf(str);
                     String[] words = str1.split(",");
-                    Log.d("마엘", words[0]);
+                    //Log.d("마엘", words[0]);
                     str.setLength(0);
 
-                    if (words[0].matches("\\d+")) {//0번째 값이 숫자일 경우에만 참이되도록 정규식사용
+                    if (words[0].matches("\\d+")) {// 수신 시작 신호
                         int nthData = Integer.parseInt(words[0]);
                         hours = nthData / 3600;
                         minutes = (nthData % 3600) / 60;
                         remainingSeconds = nthData % 60;
 
                         BluetoothStateUtil.setIsReceiveStarted(true);
+
+                        BluetoothStateUtil.setBLEStateRunning();
+
                         BluetoothStateUtil.setToogle(false);
                     } else {
-                        if (words[0].contains("Q")) {
+                        if (words[0].contains("Q")) { //0번째 값이 숫자일 경우에만 참이되도록 정규식사용 수신 종료 프로세스
                             String timeString = String.format("%02d:%02d:%02d", hours, minutes, remainingSeconds);
                             String currentTime = getCurrentTime();
 
@@ -350,6 +353,9 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
 
                             BluetoothStateUtil.setToogle(true);
                             BluetoothStateUtil.setIsReceiveStarted(false);
+
+                            BluetoothStateUtil.setBleStateStop();
+
                             BluetoothStateUtil.setReceiveEndString(endReceiveString);
                         }
                     }
@@ -358,7 +364,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
                     averageDecibel = words[2];
 
                     updateDecibelUiPage01(instantDecibel);
-                    //Log.d("마엘", "순간 데시벨 : " + words[1] + "평균 데시벨" + words[2]);
+                    Log.d("마엘", "순간 데시벨 : " + words[1] + "평균 데시벨" + words[2]);
                     DecibelModel.setCurrentDecibel(instantDecibel);
                     DecibelModel.setAverageDecibel(averageDecibel);
                 }

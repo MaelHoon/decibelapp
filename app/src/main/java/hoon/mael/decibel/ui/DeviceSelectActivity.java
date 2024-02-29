@@ -4,6 +4,9 @@ import static hoon.mael.decibel.Utils.MessageUtils.disableNavigationBar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.View;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -11,13 +14,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import hoon.mael.decibel.R;
+import hoon.mael.decibel.Utils.BluetoothStateUtil;
 import hoon.mael.decibel.Utils.PageUtil;
 import hoon.mael.decibel.databinding.ActivityMainBinding;
 import hoon.mael.decibel.databinding.ActivitySelectDeviceBinding;
+import hoon.mael.decibel.model.DecibelModel;
 
 public class DeviceSelectActivity extends AppCompatActivity implements FragmentManager.OnBackStackChangedListener {
 
     private ActivitySelectDeviceBinding binding;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +53,7 @@ public class DeviceSelectActivity extends AppCompatActivity implements FragmentM
         binding.layoutBtn.btnPrev.setOnClickListener(view ->{
             finish();
             Intent intent = new Intent(getApplicationContext(),NoticeActivity.class);
-            intent.putExtra("pageIndex",3);
+            intent.putExtra("pageIndex",4);
             startActivity(intent);
         });
     }

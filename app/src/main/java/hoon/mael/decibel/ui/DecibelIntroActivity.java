@@ -1,5 +1,6 @@
 package hoon.mael.decibel.ui;
 
+import static hoon.mael.decibel.Constants.PAGE_CHANGE_INTERVAL;
 import static hoon.mael.decibel.Utils.MessageUtils.disableNavigationBar;
 
 import android.annotation.SuppressLint;
@@ -50,12 +51,14 @@ public class DecibelIntroActivity extends AppCompatActivity {
     private Thread TimerCountRunnable = new Thread() {
         @Override
         public void run() {
-            if (!BluetoothStateUtil.getReceiveStatus() && BluetoothStateUtil.getToogle()) {
+            if (BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_STOP) {
                 TimerCount++;
-                if (TimerCount >= 10) {
+                if (TimerCount >= PAGE_CHANGE_INTERVAL) {
                     TimerCount = 0;
                     finish();
-                    PageUtil.startActivity(getApplicationContext(), DecibelPageActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), DecibelPageActivity.class);
+                    intent.putExtra("pageIndex", 2);
+                    startActivity(intent);
                 }
             }
             TimerCountHandler.removeCallbacks(TimerCountRunnable);
@@ -63,18 +66,6 @@ public class DecibelIntroActivity extends AppCompatActivity {
         }
     };
 
-    private Handler UIRefreshTimerHandler = new Handler(
-            Looper.getMainLooper()
-    );
-    private Thread UIRefreshTimerRunnable = new Thread() {
-        @Override
-        public void run() {
-            getDecibel();
-
-            UIRefreshTimerHandler.removeCallbacks(UIRefreshTimerRunnable);
-            UIRefreshTimerHandler.post(this);
-        }
-    };
     private String standardMaxDecibel, standardThrDecibel, currentDecibel, averageDecibel;
 
     @Override
@@ -108,9 +99,6 @@ public class DecibelIntroActivity extends AppCompatActivity {
 
         initComponent();
 
-        UIRefreshTimerHandler.removeCallbacks(UIRefreshTimerRunnable);
-        UIRefreshTimerHandler.post(UIRefreshTimerRunnable);
-
         TimerCountHandler.removeCallbacks(TimerCountRunnable);
         TimerCountHandler.post(TimerCountRunnable);
     }
@@ -118,7 +106,7 @@ public class DecibelIntroActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        UIRefreshTimerHandler.removeCallbacks(UIRefreshTimerRunnable);
+
         TimerCountHandler.removeCallbacks(TimerCountRunnable);
 
     }
@@ -154,12 +142,8 @@ public class DecibelIntroActivity extends AppCompatActivity {
 
             startActivity(intent);
         });
-        tvPoliceName.setOnClickListener(view -> {
-            PageUtil.startActivity(getApplicationContext(), NoticeActivity.class);
-            Intent intent = new Intent(getApplicationContext(), NoticeActivity.class);
-            intent.putExtra("pageIndex", 5);
-
-            startActivity(intent);
+        binding.layoutPoliceContent.setOnClickListener(view -> {
+            PageUtil.startActivity(getApplicationContext(), InputNoticeActivity.class);
         });
     }
 

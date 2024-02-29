@@ -52,10 +52,10 @@
             android:screenOrientation="landscape" />
 
         <activity
-            android:name=".ui.InputNoticeActivity"
+            android:name=".ui.NoticeActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".ui.NoticeActivity"
+            android:name=".ui.InputNoticeActivity"
             android:screenOrientation="landscape" />
     </application>
 
