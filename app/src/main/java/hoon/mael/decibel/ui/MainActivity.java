@@ -11,6 +11,7 @@ import android.widget.Button;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import hoon.mael.decibel.Utils.PrefUtils;
 import hoon.mael.decibel.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
@@ -18,10 +19,12 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
 
     private Button btnReplaceCal, btnReplaceSelectDevice;
+    private PrefUtils prefUtils;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        prefUtils = new PrefUtils(getApplicationContext());
 
         initBinding();
         initViews();
@@ -47,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startNewActivity(DeviceSelectActivity.class);
+                prefUtils.setHighestDecibel(String.valueOf(0));
+
             }
         });
         btnReplaceCal.setOnClickListener(new View.OnClickListener() {

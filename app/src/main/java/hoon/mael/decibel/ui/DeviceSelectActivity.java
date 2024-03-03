@@ -18,12 +18,12 @@ import hoon.mael.decibel.Utils.BluetoothStateUtil;
 import hoon.mael.decibel.Utils.PageUtil;
 import hoon.mael.decibel.databinding.ActivityMainBinding;
 import hoon.mael.decibel.databinding.ActivitySelectDeviceBinding;
+import hoon.mael.decibel.databinding.DeviceListHeaderBinding;
 import hoon.mael.decibel.model.DecibelModel;
 
 public class DeviceSelectActivity extends AppCompatActivity implements FragmentManager.OnBackStackChangedListener {
 
     private ActivitySelectDeviceBinding binding;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +55,10 @@ public class DeviceSelectActivity extends AppCompatActivity implements FragmentM
             Intent intent = new Intent(getApplicationContext(),NoticeActivity.class);
             intent.putExtra("pageIndex",4);
             startActivity(intent);
+        });
+        binding.imgPolice.setOnClickListener(view ->{
+            finishAffinity();
+            PageUtil.startActivity(getApplicationContext(),MainActivity.class);
         });
     }
 

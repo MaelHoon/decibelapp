@@ -7,14 +7,14 @@
     <androidx.appcompat.widget.AppCompatButton
         app:layout_constraintStart_toStartOf="parent"
         android:id="@+id/btn_prev"
-        android:layout_width="100dp"
+        android:layout_width="150dp"
         android:layout_height="match_parent"
         android:background="@color/transparent" />
 
     <androidx.appcompat.widget.AppCompatButton
         app:layout_constraintEnd_toEndOf="parent"
         android:id="@+id/btn_next"
-        android:layout_width="100dp"
+        android:layout_width="150dp"
         android:layout_height="match_parent"
         android:background="@color/transparent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
