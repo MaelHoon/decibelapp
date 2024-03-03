@@ -167,7 +167,7 @@ public class DecibelPageActivity extends AppCompatActivity {
         tvStandardMaxDecibel = binding.layoutPageDecibel02.tvStandardMaxDecibel;
 
         tvCurrentDecibel3 = binding.layoutPageDecibel03.tvCurrentDecibelResult;
-        tvAverageDecibel3 = binding.layoutPageDecib el03.tvStandardDecibelResult;
+        tvAverageDecibel3 = binding.layoutPageDecibel03.tvStandardDecibelResult;
         tvDB = binding.layoutPageDecibel03.tvDB;
         tvDBSize = 30;
 
