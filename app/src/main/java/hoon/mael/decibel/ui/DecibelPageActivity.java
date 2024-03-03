@@ -167,9 +167,9 @@ public class DecibelPageActivity extends AppCompatActivity {
         tvStandardMaxDecibel = binding.layoutPageDecibel02.tvStandardMaxDecibel;
 
         tvCurrentDecibel3 = binding.layoutPageDecibel03.tvCurrentDecibelResult;
-        tvAverageDecibel3 = binding.layoutPageDecibel03.tvStandardDecibelResult;
+        tvAverageDecibel3 = binding.layoutPageDecib el03.tvStandardDecibelResult;
         tvDB = binding.layoutPageDecibel03.tvDB;
-        tvDBSize = tvDB.getTextSize();
+        tvDBSize = 30;
 
         tvCurrentDecibelResultEval = binding.layoutPageDecibel03.tvCurrentDecibelResultEval;
         tvStandardDecibelResultEval = binding.layoutPageDecibel03.tvStandardDecibelResultEval;
@@ -215,7 +215,7 @@ public class DecibelPageActivity extends AppCompatActivity {
 
                 int start = fullText.indexOf("dBA");
                 int end = start + "dBA".length();
-                spannableStringBuilder.setSpan(new AbsoluteSizeSpan((int) tvDBSize+15, true), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannableStringBuilder.setSpan(new AbsoluteSizeSpan((int) tvDBSize, true), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                 tvCurrentDecibelResultEval.setText(spannableStringBuilder);
                 tvCurrentDecibelResultEval.setTextColor(getResources().getColor(R.color.colorWarning));
@@ -232,7 +232,7 @@ public class DecibelPageActivity extends AppCompatActivity {
 
                 int start = fullText.indexOf("dBA");
                 int end = start + "dBA".length();
-                spannableStringBuilder.setSpan(new AbsoluteSizeSpan((int) tvDBSize+15, true), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannableStringBuilder.setSpan(new AbsoluteSizeSpan((int) tvDBSize, true), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                 tvStandardDecibelResultEval.setText(spannableStringBuilder);
                 tvStandardDecibelResultEval.setTextColor(getResources().getColor(R.color.colorWarning));
