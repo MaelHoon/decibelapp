@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
         initViews();
         initListener();
 
+        prefUtils.reSetHighestDecibel();
+
         disableNavigationBar(this);
         setContentView(binding.getRoot());
     }

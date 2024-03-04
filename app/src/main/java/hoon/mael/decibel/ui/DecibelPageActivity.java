@@ -299,10 +299,10 @@ public class DecibelPageActivity extends AppCompatActivity {
                 tvReceiveEndString01.setVisibility(View.GONE);
                 tvReceiveEndString02.setVisibility(View.GONE);
 
-                tvCurrentDecibel2.setText("0");
+                //tvCurrentDecibel2.setText("0");
                 tvAverageDecibel2.setText("0");
 
-                prefUtils.reSetHighestDecibel();
+                //prefUtils.reSetHighestDecibel();
             }
         }
     }

@@ -9,11 +9,11 @@
     tools:context=".ui.DeviceSelectActivity">
 
     <ImageView
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="15dp"
         android:id="@+id/img_police"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
         android:src="@drawable/img_logo_police" />
 
     <FrameLayout
@@ -31,15 +31,16 @@
         <include
             android:id="@+id/layout_btn"
             layout="@layout/layout_page_button" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="15dp"
+            android:text="기획 : 서울경찰청 화영웅"
+            android:textColor="@color/textColor_default"
+            android:textSize="20sp" />
     </FrameLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="15dp"
-        android:text="기획 : 서울경찰청 화영웅"
-        android:textColor="@color/textColor_default"
-        android:textSize="20sp" />
 </LinearLayout>
