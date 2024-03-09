@@ -1,6 +1,7 @@
 package hoon.mael.decibel.ui;
 
 import static hoon.mael.decibel.Constants.PAGE_CHANGE_INTERVAL;
+import static hoon.mael.decibel.Utils.MessageUtils.disableNavigationBar;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -82,6 +83,7 @@ public class NoticeActivity extends AppCompatActivity {
         initBinding();
         initViews();
         initListener();
+        disableNavigationBar(this);
 
         Intent intent = getIntent();
         int pageIndex = intent.getIntExtra("pageIndex", 1);

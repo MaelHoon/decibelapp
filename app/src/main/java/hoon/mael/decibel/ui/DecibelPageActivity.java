@@ -11,6 +11,7 @@ import android.os.Looper;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.AbsoluteSizeSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -175,8 +176,8 @@ public class DecibelPageActivity extends AppCompatActivity {
         tvStandardDecibelResultEval = binding.layoutPageDecibel03.tvStandardDecibelResultEval;
 
         String policeName = prefUtils.getString("standardInput4") + "경찰서장";
-        standardMaxDecibel = prefUtils.getString("standardInput3");
-        standardThrDecibel = prefUtils.getString("standardInput2");
+        standardMaxDecibel = prefUtils.getString("standardInput3"); //최고소음기준
+        standardThrDecibel = prefUtils.getString("standardInput2"); //등가소음기준
         standardBackgroundDecibel = prefUtils.getString("standardInput1");
 
         binding.layoutPageDecibel03.tvStandardMaxDecibel2.setText(standardMaxDecibel);
@@ -189,8 +190,6 @@ public class DecibelPageActivity extends AppCompatActivity {
         tvStdMaxDecibel.setText(standardMaxDecibel);
         tvStdThrDecibel.setText(standardThrDecibel);
 
-        tvCurrentDecibel2.setText(prefUtils.getHighestDecibel());
-        tvCurrentDecibel3.setText(prefUtils.getHighestDecibel());
     }
 
     private void initValue() {
@@ -202,12 +201,13 @@ public class DecibelPageActivity extends AppCompatActivity {
         }
 
         try { //기기 데시벨 측정 시작시 Leq값 수신 방지
-            double correctionDecibelValue = CalculateUtil.calculateCorrection((Double.parseDouble(averageDecibel)), Double.parseDouble(standardBackgroundDecibel));
+            double correctionDecibelValue = CalculateUtil.calculateCorrection(Double.parseDouble(averageDecibel), Double.parseDouble(standardBackgroundDecibel));
 
-            int currentDecibelRound = (int) (Math.round(Double.parseDouble(currentDecibel)));
-            int AverageDecibelRound = (int) (Math.round((Double.parseDouble(averageDecibel)) + correctionDecibelValue));
+            int currentDecibelRound = (int) Math.round(Double.parseDouble(currentDecibel));
+            int AverageDecibelRound = (int) Math.round(Double.parseDouble(averageDecibel) + correctionDecibelValue);
 
-            if (Integer.parseInt(tvCurrentDecibel2.getText().toString()) > Integer.parseInt(standardMaxDecibel)) {
+            // 현재 데시벨이 최대 데시벨보다 크다면
+            if (Integer.parseInt(tvCurrentDecibel3.getText().toString()) > Integer.parseInt(standardMaxDecibel)) {
                 String text = String.valueOf(Integer.parseInt(tvCurrentDecibel2.getText().toString()) - Integer.parseInt(standardMaxDecibel));
                 String fullText = text + "dBA초과";
 
@@ -242,7 +242,7 @@ public class DecibelPageActivity extends AppCompatActivity {
             }
 
             tvCurrentDecibel.setText(currentDecibel);
-            if (Integer.parseInt(tvCurrentDecibel2.getText().toString()) <= currentDecibelRound) {
+            if (Integer.parseInt(tvCurrentDecibel2.getText().toString()) <= currentDecibelRound && Integer.parseInt(tvCurrentDecibel2.getText().toString()) >0 ) {
                 tvCurrentDecibel2.setText(String.valueOf(currentDecibelRound));
                 tvCurrentDecibel3.setText(String.valueOf(currentDecibelRound));
 
@@ -281,11 +281,52 @@ public class DecibelPageActivity extends AppCompatActivity {
         }
 
         if (BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_STOP) {
+            Log.d("테스트","현재종료된상태");
             tvReceiveEndString01.setVisibility(View.VISIBLE);
             tvReceiveEndString02.setVisibility(View.VISIBLE);
 
             tvReceiveEndString01.setText(BluetoothStateUtil.getReceiveEndString());
             tvReceiveEndString02.setText(BluetoothStateUtil.getReceiveEndString());
+
+            tvAverageDecibel2.setText(prefUtils.getHighestStandardDecibelEnd());
+            tvCurrentDecibel2.setText(prefUtils.getHighestDecibelEnd());
+
+            tvAverageDecibel3.setText(prefUtils.getHighestStandardDecibelEnd());
+            tvCurrentDecibel3.setText(prefUtils.getHighestDecibelEnd());
+
+            if (Integer.parseInt(tvAverageDecibel3.getText().toString()) > Integer.parseInt(standardThrDecibel)) {
+                String text = String.valueOf(Integer.parseInt(tvAverageDecibel3.getText().toString()) - Integer.parseInt(standardThrDecibel));
+                String fullText = text + "dBA초과";
+
+                SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(fullText);
+
+                int start = fullText.indexOf("dBA");
+                int end = start + "dBA".length();
+                spannableStringBuilder.setSpan(new AbsoluteSizeSpan((int) tvDBSize, true), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                tvCurrentDecibelResultEval.setText(spannableStringBuilder);
+                tvCurrentDecibelResultEval.setTextColor(getResources().getColor(R.color.colorWarning));
+            } else {
+                tvCurrentDecibelResultEval.setText("준수");
+                tvCurrentDecibelResultEval.setTextColor(getResources().getColor(R.color.btnColor01));
+            }
+
+            if (Integer.parseInt(tvCurrentDecibel3.getText().toString()) > Integer.parseInt(standardMaxDecibel)) {
+                String text = String.valueOf(Integer.parseInt(tvCurrentDecibel3.getText().toString()) - Integer.parseInt(standardMaxDecibel));
+                String fullText = text + "dBA초과";
+
+                SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(fullText);
+
+                int start = fullText.indexOf("dBA");
+                int end = start + "dBA".length();
+                spannableStringBuilder.setSpan(new AbsoluteSizeSpan((int) tvDBSize, true), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                tvCurrentDecibelResultEval.setText(spannableStringBuilder);
+                tvCurrentDecibelResultEval.setTextColor(getResources().getColor(R.color.colorWarning));
+            } else {
+                tvCurrentDecibelResultEval.setText("준수");
+                tvCurrentDecibelResultEval.setTextColor(getResources().getColor(R.color.btnColor01));
+            }
 
             if (BluetoothStateUtil.getToogle()) {
                 decibelPage01.setVisibility(View.GONE);
@@ -299,9 +340,9 @@ public class DecibelPageActivity extends AppCompatActivity {
                 tvReceiveEndString01.setVisibility(View.GONE);
                 tvReceiveEndString02.setVisibility(View.GONE);
 
-                //tvCurrentDecibel2.setText("0");
+                tvCurrentDecibel2.setText(String.valueOf(prefUtils.getHighestDecibel()));
+                tvCurrentDecibel3.setText(String.valueOf(prefUtils.getHighestDecibel()));
                 tvAverageDecibel2.setText("0");
-
                 //prefUtils.reSetHighestDecibel();
             }
         }

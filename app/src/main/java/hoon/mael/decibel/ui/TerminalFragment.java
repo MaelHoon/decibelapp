@@ -34,6 +34,8 @@ import com.airbnb.lottie.LottieAnimationView;
 import java.text.SimpleDateFormat;
 import java.util.ArrayDeque;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import hoon.mael.decibel.R;
 import hoon.mael.decibel.Serial.SerialListener;
@@ -325,11 +327,11 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
             for (byte[] data : datas) {
                 String ByteToStr = new String(data);
                 str = str.append(ByteToStr);
+                String str1 = String.valueOf(str);
+                String[] words = str1.split(",");
 
-                if (str.toString().contains("\n\r")) {
-                    String str1 = String.valueOf(str);
-                    String[] words = str1.split(",");
-                    //Log.d("마엘", words[0]);
+                if (str.toString().contains("\n\r") && words.length == 4) {
+                    //Log.d("마엘", str1);
                     str.setLength(0);
 
                     if (words[0].matches("\\d+")) {// 수신 시작 신호
@@ -344,20 +346,6 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
 
                         BluetoothStateUtil.setToogle(false);
                     } else {
-                        if (words[0].contains("Q")) { //0번째 값이 숫자일 경우에만 참이되도록 정규식사용 수신 종료 프로세스
-                            String timeString = String.format("%02d:%02d:%02d", hours, minutes, remainingSeconds);
-                            String currentTime = getCurrentTime();
-
-                            String endReceiveString = currentTime + " Runtime " + timeString;
-                            Log.d("마엘", endReceiveString);
-
-                            BluetoothStateUtil.setToogle(true);
-                            BluetoothStateUtil.setIsReceiveStarted(false);
-
-                            BluetoothStateUtil.setBleStateStop();
-
-                            BluetoothStateUtil.setReceiveEndString(endReceiveString);
-                        }
                     }
 
                     instantDecibel = words[1];
@@ -365,12 +353,50 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
 
                     updateDecibelUiPage01(instantDecibel);
                     Log.d("마엘", "순간 데시벨 : " + words[1] + "평균 데시벨" + words[2]);
+
                     DecibelModel.setCurrentDecibel(instantDecibel);
                     DecibelModel.setAverageDecibel(averageDecibel);
+                }else if(words[0].contains("Q")){//0번째 값이 숫자일 경우에만 참이되도록 정규식사용 수신 종료 프로세스
+                        String timeString = String.format("%02d:%02d:%02d", hours, minutes, remainingSeconds);
+                        String currentTime = getCurrentTime();
+
+                        String endReceiveString = currentTime + " Runtime " + timeString;
+                        //Log.d("마엘", endReceiveString);
+
+                        BluetoothStateUtil.setToogle(true);
+                        BluetoothStateUtil.setIsReceiveStarted(false);
+
+                        BluetoothStateUtil.setBleStateStop();
+
+                        BluetoothStateUtil.setReceiveEndString(endReceiveString);
+
+                    // SPLmax 값 추출 -> 종료시 최고 소음 값
+                    double splMax = extractValue(str1, "SPLmax");
+                    // Leq 값 추출 -> 종료시 등가 소음 값
+                    double leq = extractValue(str1, "Leq");
+                    prefUtils.setHighestStandardDecibelEnd(String.valueOf(leq));//등가 소음값 저장
+                    prefUtils.setHighestDecibelEnd(String.valueOf(splMax));//최고 소음값 저장
+
+                    //Log.d("마엘2", str1);
+                    //Log.d("마엘2", "splMax : "+String.valueOf(splMax) + "leq : "+String.valueOf(leq));
+                    //Log.d("마엘2", words2[1]);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private double extractValue(String data, String key) {
+        String pattern = key + " = ([\\d.]+)";
+
+        Pattern p = Pattern.compile(pattern);
+        Matcher m = p.matcher(data);
+
+        if (m.find()) {
+            return Double.parseDouble(m.group(1));
+        } else {
+            return 0.0;
         }
     }
 
@@ -422,9 +448,9 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
 
     @Override
     public void onSerialRead(byte[] data) {
-        ArrayDeque<byte[]> datas = new ArrayDeque<>();
-        datas.add(data);
-        receive(datas);
+        //ArrayDeque<byte[]> datas = new ArrayDeque<>();
+        //datas.add(data);
+        //receive(datas);
     }
 
     public void onSerialRead(ArrayDeque<byte[]> datas) {

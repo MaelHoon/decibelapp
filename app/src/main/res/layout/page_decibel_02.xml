@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:paddingStart="20dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_default"
@@ -26,7 +25,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="1.8"
             android:orientation="vertical">
 
             <TextView
@@ -59,7 +58,7 @@
                     android:autoSizeTextType="uniform"
                     android:gravity="center|right"
                     android:maxLines="1"
-                    android:text="최고소음 기준:"
+                    android:text="최고소음 기준 :"
                     android:textColor="@color/textColor_default" />
 
                 <TextView
@@ -96,14 +95,14 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1.4"
+            android:layout_weight="1.5"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/tv_currentDecibel_2"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="7"
+                android:layout_weight="15"
                 android:autoSizeMaxTextSize="3000sp"
                 android:autoSizeMinTextSize="70sp"
                 android:autoSizeStepGranularity="1sp"
@@ -115,17 +114,18 @@
                 tools:text="115" />
 
             <TextView
-                android:layout_marginStart="10dp"
                 android:layout_width="0dp"
-                android:layout_height="100dp"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
+                android:layout_marginStart="30dp"
                 android:layout_marginTop="20dp"
-                android:layout_weight="5"
+                android:layout_marginBottom="40dp"
+                android:layout_weight="6"
                 android:autoSizeMaxTextSize="70sp"
                 android:autoSizeMinTextSize="10sp"
                 android:autoSizeStepGranularity="1sp"
                 android:autoSizeTextType="uniform"
-                android:gravity="center|left"
+                android:gravity="center|left|bottom"
                 android:maxLines="1"
                 android:text="dBA"
                 android:textColor="@color/textColor_default"
@@ -142,7 +142,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="1.8"
             android:orientation="vertical">
 
             <TextView
@@ -175,7 +175,7 @@
                     android:autoSizeTextType="uniform"
                     android:gravity="center|right"
                     android:maxLines="1"
-                    android:text="등가소음 기준:"
+                    android:text="등가소음 기준 :"
                     android:textColor="@color/textColor_default" />
 
                 <TextView
@@ -212,14 +212,14 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1.4"
+            android:layout_weight="1.5"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/tv_averageDecibel_2"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="7"
+                android:layout_weight="15"
                 android:autoSizeMaxTextSize="3000sp"
                 android:autoSizeMinTextSize="70sp"
                 android:autoSizeStepGranularity="1sp"
@@ -231,17 +231,18 @@
                 tools:text="115" />
 
             <TextView
-                android:layout_marginStart="10dp"
                 android:layout_width="0dp"
-                android:layout_height="100dp"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
+                android:layout_marginStart="30dp"
                 android:layout_marginTop="20dp"
-                android:layout_weight="5"
+                android:layout_marginBottom="40dp"
+                android:layout_weight="6"
                 android:autoSizeMaxTextSize="70sp"
                 android:autoSizeMinTextSize="10sp"
                 android:autoSizeStepGranularity="1sp"
                 android:autoSizeTextType="uniform"
-                android:gravity="center|left"
+                android:gravity="center|left|bottom"
                 android:maxLines="1"
                 android:text="dBA"
                 android:textColor="@color/textColor_default"
