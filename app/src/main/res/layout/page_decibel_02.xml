@@ -17,6 +17,7 @@
         tools:text="2023.04.27 11:17:16 Runtime 00:01:00" />
 
     <LinearLayout
+        android:id="@+id/layout_decibel_page_02_max"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -134,6 +135,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/layout_decibel_page_02_standard"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"

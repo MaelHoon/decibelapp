@@ -14,6 +14,7 @@ import android.text.style.AbsoluteSizeSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,10 +44,13 @@ public class DecibelPageActivity extends AppCompatActivity {
     private TextView tvCurrentDecibelResultEval, tvStandardDecibelResultEval;
     private TextView tvReceiveEndString02, tvReceiveEndString01;
     private TextView tvDB;
+    private LinearLayout layoutDecibelPage02Max, layoutDecibelPage02Standard;
 
     private View decibelPage01, decibelPage02, decibelPage03;
     private PrefUtils prefUtils;
     private int pageIndex = 1;
+    private int endPageIndex = 1; // 수신 종료시 화면 전환을 위한 페이지 인덱스 저장
+
     private Timer UIUpdateTimer;
     private boolean IsUIUpdateTimerRunning = false;
 
@@ -78,14 +82,31 @@ public class DecibelPageActivity extends AppCompatActivity {
         @Override
         public void run() {
             if (BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_STOP && !(decibelPage02.getVisibility() == View.VISIBLE)) {
-                TimerCount++;
-                if (TimerCount >= PAGE_CHANGE_INTERVAL) {
-                    TimerCount = 0;
-                    decibelPage01.setVisibility(View.GONE);
-                    decibelPage02.setVisibility(View.VISIBLE);
+                if (!(decibelPage02.getVisibility() == View.VISIBLE)) {
+                    TimerCount++;
+                    if (TimerCount >= PAGE_CHANGE_INTERVAL) {
+                        TimerCount = 0;
+                        decibelPage01.setVisibility(View.GONE);
+                        decibelPage02.setVisibility(View.VISIBLE);
+                        decibelPage03.setVisibility(View.GONE);
+                    }
+                } else {
+                    TimerCount++;
+                    if (TimerCount >= PAGE_CHANGE_INTERVAL) {
+                        TimerCount = 0;
+                        showCurrentPage();
+                    }
+                }
+            }
+            if (BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_RUNNING) {
+                if (BluetoothStateUtil.getStartToogle()) {
+                    BluetoothStateUtil.setStartToogle(false);
+                    decibelPage01.setVisibility(View.VISIBLE);
+                    decibelPage02.setVisibility(View.GONE);
                     decibelPage03.setVisibility(View.GONE);
                 }
             }
+
             TimerCountHandler.removeCallbacks(TimerCountRunnable);
             TimerCountHandler.postDelayed(this, 1000);
         }
@@ -107,6 +128,11 @@ public class DecibelPageActivity extends AppCompatActivity {
         int pageIndex = intent.getIntExtra("pageIndex", 3);
 
         switch (pageIndex) {
+            case 1:
+                decibelPage01.setVisibility(View.VISIBLE);
+                decibelPage02.setVisibility(View.GONE);
+                decibelPage03.setVisibility(View.GONE);
+                break;
             case 3:
                 decibelPage01.setVisibility(View.GONE);
                 decibelPage02.setVisibility(View.GONE);
@@ -163,6 +189,8 @@ public class DecibelPageActivity extends AppCompatActivity {
         tvCurrentDecibel2 = binding.layoutPageDecibel02.tvCurrentDecibel2;
         tvAverageDecibel2 = binding.layoutPageDecibel02.tvAverageDecibel2;
         tvReceiveEndString02 = binding.layoutPageDecibel02.tvReceiveEndString02;
+        layoutDecibelPage02Max = binding.layoutPageDecibel02.layoutDecibelPage02Max;
+        layoutDecibelPage02Standard = binding.layoutPageDecibel02.layoutDecibelPage02Standard;
 
         tvStandardThrDecibel = binding.layoutPageDecibel02.tvStandardThrDecibel;
         tvStandardMaxDecibel = binding.layoutPageDecibel02.tvStandardMaxDecibel;
@@ -242,7 +270,7 @@ public class DecibelPageActivity extends AppCompatActivity {
             }
 
             tvCurrentDecibel.setText(currentDecibel);
-            if (Integer.parseInt(tvCurrentDecibel2.getText().toString()) <= currentDecibelRound && Integer.parseInt(tvCurrentDecibel2.getText().toString()) >0 ) {
+            if (Integer.parseInt(tvCurrentDecibel2.getText().toString()) <= currentDecibelRound && Integer.parseInt(tvCurrentDecibel2.getText().toString()) > 0) {
                 tvCurrentDecibel2.setText(String.valueOf(currentDecibelRound));
                 tvCurrentDecibel3.setText(String.valueOf(currentDecibelRound));
 
@@ -281,7 +309,7 @@ public class DecibelPageActivity extends AppCompatActivity {
         }
 
         if (BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_STOP) {
-            Log.d("테스트","현재종료된상태");
+            Log.d("테스트", "현재종료된상태");
             tvReceiveEndString01.setVisibility(View.VISIBLE);
             tvReceiveEndString02.setVisibility(View.VISIBLE);
 
@@ -306,9 +334,11 @@ public class DecibelPageActivity extends AppCompatActivity {
 
                 tvCurrentDecibelResultEval.setText(spannableStringBuilder);
                 tvCurrentDecibelResultEval.setTextColor(getResources().getColor(R.color.colorWarning));
+                layoutDecibelPage02Standard.setBackgroundColor(getResources().getColor(R.color.colorWarning));
             } else {
                 tvCurrentDecibelResultEval.setText("준수");
                 tvCurrentDecibelResultEval.setTextColor(getResources().getColor(R.color.btnColor01));
+                layoutDecibelPage02Standard.setBackgroundColor(getResources().getColor(R.color.background_default));
             }
 
             if (Integer.parseInt(tvCurrentDecibel3.getText().toString()) > Integer.parseInt(standardMaxDecibel)) {
@@ -323,17 +353,19 @@ public class DecibelPageActivity extends AppCompatActivity {
 
                 tvCurrentDecibelResultEval.setText(spannableStringBuilder);
                 tvCurrentDecibelResultEval.setTextColor(getResources().getColor(R.color.colorWarning));
+                layoutDecibelPage02Max.setBackgroundColor(getResources().getColor(R.color.colorWarning));
             } else {
                 tvCurrentDecibelResultEval.setText("준수");
                 tvCurrentDecibelResultEval.setTextColor(getResources().getColor(R.color.btnColor01));
+                layoutDecibelPage02Max.setBackgroundColor(getResources().getColor(R.color.background_default));
             }
 
-            if (BluetoothStateUtil.getToogle()) {
+            if (BluetoothStateUtil.getEndToogle()) {//수신 종료시 1회만 실행하기위해 조건문 사용
                 decibelPage01.setVisibility(View.GONE);
                 decibelPage02.setVisibility(View.VISIBLE);
                 decibelPage03.setVisibility(View.GONE);
 
-                BluetoothStateUtil.setToogle(false);
+                BluetoothStateUtil.setEndToogle(false);
             }
         } else {
             if (tvReceiveEndString01.getVisibility() == View.VISIBLE) {
@@ -343,6 +375,9 @@ public class DecibelPageActivity extends AppCompatActivity {
                 tvCurrentDecibel2.setText(String.valueOf(prefUtils.getHighestDecibel()));
                 tvCurrentDecibel3.setText(String.valueOf(prefUtils.getHighestDecibel()));
                 tvAverageDecibel2.setText("0");
+
+                layoutDecibelPage02Standard.setBackgroundColor(getResources().getColor(R.color.background_default));
+                layoutDecibelPage02Max.setBackgroundColor(getResources().getColor(R.color.background_default));
                 //prefUtils.reSetHighestDecibel();
             }
         }
@@ -500,7 +535,8 @@ public class DecibelPageActivity extends AppCompatActivity {
         if (isDecibelPage01Visible && !isDecibelPage02Visible && !isDecibelPage03Visible) {
             pageIndex = 1;
             return 1;
-        } else if (!isDecibelPage01Visible && isDecibelPage02Visible && !isDecibelPage03Visible) {
+        } else if (!isDecibelPage01Visible && isDecibelPage02Visible && !isDecibelPage03Visible
+                && BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_STOP) {
             pageIndex = 2;
             return 2;
         } else if (!isDecibelPage01Visible && !isDecibelPage02Visible && isDecibelPage03Visible) {

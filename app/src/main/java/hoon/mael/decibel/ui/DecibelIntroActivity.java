@@ -51,13 +51,22 @@ public class DecibelIntroActivity extends AppCompatActivity {
     private Thread TimerCountRunnable = new Thread() {
         @Override
         public void run() {
-            if (BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_STOP) {
+            //if (BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_STOP) {
                 TimerCount++;
                 if (TimerCount >= PAGE_CHANGE_INTERVAL) {
                     TimerCount = 0;
                     finish();
                     Intent intent = new Intent(getApplicationContext(), DecibelPageActivity.class);
                     intent.putExtra("pageIndex", 2);
+                    startActivity(intent);
+                }
+           // }
+            if(BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_RUNNING){
+                if(BluetoothStateUtil.getStartToogle()) {
+                    finish();
+                    BluetoothStateUtil.setStartToogle(false);
+                    Intent intent = new Intent(getApplicationContext(), DecibelPageActivity.class);
+                    intent.putExtra("pageIndex", 1);
                     startActivity(intent);
                 }
             }

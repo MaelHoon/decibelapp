@@ -7,11 +7,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -56,7 +53,7 @@ public class NoticeActivity extends AppCompatActivity {
     private Thread TimerCountRunnable = new Thread() {
         @Override
         public void run() {
-            if (BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_STOP) {
+          //  if (BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_STOP) {
                 TimerCount++;
                 if (TimerCount >= PAGE_CHANGE_INTERVAL) {
                     TimerCount = 0;
@@ -65,7 +62,17 @@ public class NoticeActivity extends AppCompatActivity {
                     intent.putExtra("pageIndex", 2);
                     startActivity(intent);
                 }
+          //  }
+            if(BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_RUNNING){
+                if(BluetoothStateUtil.getStartToogle()) {
+                    finish();
+                    BluetoothStateUtil.setStartToogle(false);
+                    Intent intent = new Intent(getApplicationContext(), DecibelPageActivity.class);
+                    intent.putExtra("pageIndex", 1);
+                    startActivity(intent);
+                }
             }
+
             TimerCountHandler.removeCallbacks(TimerCountRunnable);
             TimerCountHandler.postDelayed(this, 1000);
         }
@@ -99,13 +106,13 @@ public class NoticeActivity extends AppCompatActivity {
     }
 
     private void initValue() {
-        if (BluetoothStateUtil.getToogle()) {
+        if (BluetoothStateUtil.getEndToogle()) {
             Intent intent = new Intent(getApplicationContext(),DecibelPageActivity.class);
             intent.putExtra("pageIndex",2);
             startActivity(intent);
             finish();
 
-            BluetoothStateUtil.setToogle(false);
+            BluetoothStateUtil.setEndToogle(false);
         }
     }
 
