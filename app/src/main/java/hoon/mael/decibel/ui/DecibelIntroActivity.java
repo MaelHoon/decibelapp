@@ -1,6 +1,7 @@
 package hoon.mael.decibel.ui;
 
 import static hoon.mael.decibel.Constants.PAGE_CHANGE_INTERVAL;
+import static hoon.mael.decibel.Constants.PAGE_INDEX;
 import static hoon.mael.decibel.Utils.MessageUtils.disableNavigationBar;
 
 import android.annotation.SuppressLint;
@@ -51,22 +52,23 @@ public class DecibelIntroActivity extends AppCompatActivity {
     private Thread TimerCountRunnable = new Thread() {
         @Override
         public void run() {
-            //if (BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_STOP) {
+            if (BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_STOP) {
                 TimerCount++;
                 if (TimerCount >= PAGE_CHANGE_INTERVAL) {
                     TimerCount = 0;
                     finish();
                     Intent intent = new Intent(getApplicationContext(), DecibelPageActivity.class);
-                    intent.putExtra("pageIndex", 2);
+                    intent.putExtra(PAGE_INDEX, 2);
                     startActivity(intent);
                 }
-           // }
+            }
+
             if(BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_RUNNING){
                 if(BluetoothStateUtil.getStartToogle()) {
                     finish();
                     BluetoothStateUtil.setStartToogle(false);
                     Intent intent = new Intent(getApplicationContext(), DecibelPageActivity.class);
-                    intent.putExtra("pageIndex", 1);
+                    intent.putExtra(PAGE_INDEX, 1);
                     startActivity(intent);
                 }
             }
@@ -94,6 +96,8 @@ public class DecibelIntroActivity extends AppCompatActivity {
             }
         });
         prefUtils = new PrefUtils(getApplicationContext());
+
+        PageUtil.setDecibelIntroActivity(true);
 
         initComponent();
         initListener();
@@ -143,16 +147,19 @@ public class DecibelIntroActivity extends AppCompatActivity {
         btnPrev.setOnClickListener(view -> {
             finish();
             PageUtil.startActivity(getApplicationContext(), InputDecibelActivity.class);
+            PageUtil.setDecibelIntroActivity(false);
         });
         btnNext.setOnClickListener(view -> {
             finish();
             Intent intent = new Intent(getApplicationContext(), DecibelPageActivity.class);
-            intent.putExtra("pageIndex", 1);
+            intent.putExtra(PAGE_INDEX, 1);
 
+            PageUtil.setDecibelIntroActivity(false);
             startActivity(intent);
         });
         binding.layoutPoliceContent.setOnClickListener(view -> {
             PageUtil.startActivity(getApplicationContext(), InputNoticeActivity.class);
+            finish();
         });
     }
 

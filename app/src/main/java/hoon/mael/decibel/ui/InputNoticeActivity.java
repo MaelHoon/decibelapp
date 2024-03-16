@@ -1,6 +1,7 @@
 package hoon.mael.decibel.ui;
 
 import static hoon.mael.decibel.Constants.PAGE_CHANGE_INTERVAL;
+import static hoon.mael.decibel.Constants.PAGE_INDEX;
 import static hoon.mael.decibel.Utils.MessageUtils.disableNavigationBar;
 
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -17,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import hoon.mael.decibel.Utils.BluetoothStateUtil;
+import hoon.mael.decibel.Utils.PageUtil;
 import hoon.mael.decibel.Utils.PrefUtils;
 import hoon.mael.decibel.databinding.ActivityInputNoticeBinding;
 
@@ -35,22 +38,22 @@ public class InputNoticeActivity extends AppCompatActivity {
     private Thread TimerCountRunnable = new Thread() {
         @Override
         public void run() {
-           // if (BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_STOP) {
+            if (BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_STOP) {
                 TimerCount++;
                 if (TimerCount >= PAGE_CHANGE_INTERVAL) {
                     TimerCount = 0;
                     finish();
                     Intent intent = new Intent(getApplicationContext(), DecibelPageActivity.class);
-                    intent.putExtra("pageIndex", 2);
+                    intent.putExtra(PAGE_INDEX, 2);
                     startActivity(intent);
                 }
-          //  }
-            if(BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_RUNNING){
-                if(BluetoothStateUtil.getStartToogle()) {
+            }
+            if (BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_RUNNING) {
+                if (BluetoothStateUtil.getStartToogle()) {
                     finish();
                     BluetoothStateUtil.setStartToogle(false);
                     Intent intent = new Intent(getApplicationContext(), DecibelPageActivity.class);
-                    intent.putExtra("pageIndex", 1);
+                    intent.putExtra(PAGE_INDEX, 1);
                     startActivity(intent);
                 }
             }
@@ -65,11 +68,14 @@ public class InputNoticeActivity extends AppCompatActivity {
 
         prefUtils = new PrefUtils(getApplicationContext());
 
+        PageUtil.setInputNoticeActivity(true);
+        PageUtil.setNoticePage(0);
+
         initBinding();
         initListener();
     }
 
-    private void initBinding(){
+    private void initBinding() {
         binding = ActivityInputNoticeBinding.inflate(LayoutInflater.from(getApplicationContext()));
         setContentView(binding.getRoot());
 
@@ -94,7 +100,7 @@ public class InputNoticeActivity extends AppCompatActivity {
         super.onResume();
 
         TimerCountHandler.removeCallbacks(TimerCountRunnable);
-        TimerCountHandler.postDelayed(TimerCountRunnable,1000);
+        TimerCountHandler.postDelayed(TimerCountRunnable, 1000);
     }
 
     @Override
@@ -104,7 +110,7 @@ public class InputNoticeActivity extends AppCompatActivity {
         TimerCountHandler.removeCallbacks(TimerCountRunnable);
     }
 
-    private void initListener(){
+    private void initListener() {
         edtNoticeTitle.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -136,7 +142,8 @@ public class InputNoticeActivity extends AppCompatActivity {
                 prefUtils.saveString(PrefUtils.NOTICE_CONTENT_KEY, edtNoticeContent.getText().toString());
             }
         });
-        binding.layoutPoliceContent.setOnClickListener(view ->{
+        binding.layoutPoliceContent.setOnClickListener(view -> {
+            PageUtil.setInputNoticeActivity(false);
             finish();
         });
     }

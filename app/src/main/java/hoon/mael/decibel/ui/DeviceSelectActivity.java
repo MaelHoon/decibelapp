@@ -1,5 +1,6 @@
 package hoon.mael.decibel.ui;
 
+import static hoon.mael.decibel.Constants.PAGE_INDEX;
 import static hoon.mael.decibel.Utils.MessageUtils.disableNavigationBar;
 
 import android.content.Intent;
@@ -41,8 +42,6 @@ public class DeviceSelectActivity extends AppCompatActivity implements FragmentM
         initListener();
 
         disableNavigationBar(this);
-
-        PageUtil.setPage(1);
     }
 
     private void initListener(){
@@ -53,7 +52,7 @@ public class DeviceSelectActivity extends AppCompatActivity implements FragmentM
         binding.layoutBtn.btnPrev.setOnClickListener(view ->{
             finish();
             Intent intent = new Intent(getApplicationContext(),NoticeActivity.class);
-            intent.putExtra("pageIndex",4);
+            intent.putExtra(PAGE_INDEX,4);
             startActivity(intent);
         });
         binding.imgPolice.setOnClickListener(view ->{

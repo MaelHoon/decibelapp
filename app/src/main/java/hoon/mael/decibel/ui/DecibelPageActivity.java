@@ -1,6 +1,8 @@
 package hoon.mael.decibel.ui;
 
 import static hoon.mael.decibel.Constants.PAGE_CHANGE_INTERVAL;
+import static hoon.mael.decibel.Constants.PAGE_INDEX;
+import static hoon.mael.decibel.Constants.PAGE_INDEX_END;
 import static hoon.mael.decibel.Utils.MessageUtils.disableNavigationBar;
 
 import android.content.Intent;
@@ -81,8 +83,9 @@ public class DecibelPageActivity extends AppCompatActivity {
     private Thread TimerCountRunnable = new Thread() {
         @Override
         public void run() {
-            if (BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_STOP && !(decibelPage02.getVisibility() == View.VISIBLE)) {
-                if (!(decibelPage02.getVisibility() == View.VISIBLE)) {
+            //if (BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_STOP && !(decibelPage02.getVisibility() == View.VISIBLE)) {
+                if (!(decibelPage02.getVisibility() == View.VISIBLE) && PageUtil.getPage() == 0 && !PageUtil.getInputNoticeActivity()
+                && !PageUtil.getDecibelIntroActivity()) {
                     TimerCount++;
                     if (TimerCount >= PAGE_CHANGE_INTERVAL) {
                         TimerCount = 0;
@@ -90,14 +93,42 @@ public class DecibelPageActivity extends AppCompatActivity {
                         decibelPage02.setVisibility(View.VISIBLE);
                         decibelPage03.setVisibility(View.GONE);
                     }
-                } else {
+                } else if(PageUtil.getPage() == 0&& !PageUtil.getInputNoticeActivity()&& !PageUtil.getDecibelIntroActivity()) {
                     TimerCount++;
                     if (TimerCount >= PAGE_CHANGE_INTERVAL) {
                         TimerCount = 0;
                         showCurrentPage();
                     }
                 }
+            if (PageUtil.getPage() != 0) {
+                TimerCount++;
+                if (TimerCount >= PAGE_CHANGE_INTERVAL) {
+                    TimerCount = 0;
+                    Intent intent = new Intent(getApplicationContext(), NoticeActivity.class);
+                    intent.putExtra(PAGE_INDEX_END, PageUtil.getPage());
+                    startActivity(intent);
+                    finish();
+                }
             }
+            if(PageUtil.getInputNoticeActivity()){
+                TimerCount++;
+                if (TimerCount >= PAGE_CHANGE_INTERVAL) {
+                    TimerCount = 0;
+                    finish();
+                    Intent intent = new Intent(getApplicationContext(), InputNoticeActivity.class);
+                    startActivity(intent);
+                }
+            }
+            if(PageUtil.getDecibelIntroActivity()){
+                TimerCount++;
+                if (TimerCount >= PAGE_CHANGE_INTERVAL) {
+                    TimerCount = 0;
+                    finish();
+                    Intent intent = new Intent(getApplicationContext(), DecibelIntroActivity.class);
+                    startActivity(intent);
+                }
+            }
+           // }
             if (BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_RUNNING) {
                 if (BluetoothStateUtil.getStartToogle()) {
                     BluetoothStateUtil.setStartToogle(false);
@@ -125,9 +156,9 @@ public class DecibelPageActivity extends AppCompatActivity {
         initListener();
 
         Intent intent = getIntent();
-        int pageIndex = intent.getIntExtra("pageIndex", 3);
+        int getPageIndex = intent.getIntExtra(PAGE_INDEX, 3);
 
-        switch (pageIndex) {
+        switch (getPageIndex) {
             case 1:
                 decibelPage01.setVisibility(View.VISIBLE);
                 decibelPage02.setVisibility(View.GONE);
@@ -137,6 +168,7 @@ public class DecibelPageActivity extends AppCompatActivity {
                 decibelPage01.setVisibility(View.GONE);
                 decibelPage02.setVisibility(View.GONE);
                 decibelPage03.setVisibility(View.VISIBLE);
+                pageIndex = 3;
                 break;
             case 2:
                 decibelPage01.setVisibility(View.GONE);
@@ -444,6 +476,7 @@ public class DecibelPageActivity extends AppCompatActivity {
             updateDecibelPageNext();
         });
         binding.layoutPoliceContent.setOnClickListener(view -> {
+            finish();
             PageUtil.startActivity(getApplicationContext(), InputNoticeActivity.class);
         });
     }

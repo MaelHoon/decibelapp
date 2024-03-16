@@ -21,7 +21,6 @@ public class BluetoothStateUtil {
     }
 
     public static int getBleState(){
-        BLE_STATE_OBSERVER = BLE_STATE_STOP; //지우기
         return BLE_STATE_OBSERVER;
     }
 

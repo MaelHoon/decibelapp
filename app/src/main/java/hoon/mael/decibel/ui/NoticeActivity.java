@@ -1,6 +1,8 @@
 package hoon.mael.decibel.ui;
 
 import static hoon.mael.decibel.Constants.PAGE_CHANGE_INTERVAL;
+import static hoon.mael.decibel.Constants.PAGE_INDEX;
+import static hoon.mael.decibel.Constants.PAGE_INDEX_END;
 import static hoon.mael.decibel.Utils.MessageUtils.disableNavigationBar;
 
 import android.content.Intent;
@@ -53,22 +55,23 @@ public class NoticeActivity extends AppCompatActivity {
     private Thread TimerCountRunnable = new Thread() {
         @Override
         public void run() {
-          //  if (BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_STOP) {
+            if (BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_STOP) {
                 TimerCount++;
                 if (TimerCount >= PAGE_CHANGE_INTERVAL) {
                     TimerCount = 0;
                     finish();
                     Intent intent = new Intent(getApplicationContext(), DecibelPageActivity.class);
-                    intent.putExtra("pageIndex", 2);
+                    intent.putExtra(PAGE_INDEX, 2);
                     startActivity(intent);
                 }
-          //  }
+            }
             if(BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_RUNNING){
                 if(BluetoothStateUtil.getStartToogle()) {
                     finish();
                     BluetoothStateUtil.setStartToogle(false);
                     Intent intent = new Intent(getApplicationContext(), DecibelPageActivity.class);
-                    intent.putExtra("pageIndex", 1);
+                    intent.putExtra(PAGE_INDEX, 1);
+                    TimerCountHandler.removeCallbacks(this);
                     startActivity(intent);
                 }
             }
@@ -93,7 +96,7 @@ public class NoticeActivity extends AppCompatActivity {
         disableNavigationBar(this);
 
         Intent intent = getIntent();
-        int pageIndex = intent.getIntExtra("pageIndex", 1);
+        int pageIndex = intent.getIntExtra(PAGE_INDEX, 1);
 
         switch (pageIndex) {
             case 3:
@@ -103,12 +106,22 @@ public class NoticeActivity extends AppCompatActivity {
                 showPage(4);
                 break;
         }
+
+        if (BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_STOP){
+            Intent intent2 = getIntent();
+            int endPageIndex = intent2.getIntExtra(PAGE_INDEX_END, 1);
+            try {
+                showPage(endPageIndex);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
     }
 
     private void initValue() {
         if (BluetoothStateUtil.getEndToogle()) {
             Intent intent = new Intent(getApplicationContext(),DecibelPageActivity.class);
-            intent.putExtra("pageIndex",2);
+            intent.putExtra(PAGE_INDEX,2);
             startActivity(intent);
             finish();
 
@@ -129,6 +142,7 @@ public class NoticeActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
         TimerCountHandler.removeCallbacks(TimerCountRunnable);
         UIRefreshTimerHandler.removeCallbacks(UIRefreshTimerRunnable);
     }
@@ -176,8 +190,10 @@ public class NoticeActivity extends AppCompatActivity {
     private void showPrevPage() {
         if (PageIndex <= 1) {
             Intent intent = new Intent(getApplicationContext(), DecibelPageActivity.class);
-            intent.putExtra("pageIndex", 3);
+            intent.putExtra(PAGE_INDEX, 3);
             startActivity(intent);
+            finish();
+            PageUtil.setNoticePage(0);
             return;
         }
         PageIndex--;
@@ -189,26 +205,35 @@ public class NoticeActivity extends AppCompatActivity {
             case 1:
                 ivIntroBackground.setImageResource(R.drawable.img_decibel_intro_over_backgroud01);
                 ivIntroBackground.setVisibility(View.VISIBLE);
+
+                PageUtil.setNoticePage(1);
                 PageIndex = 1;
                 break;
             case 2:
                 ivIntroBackground.setImageResource(R.drawable.img_decibel_intro_over_backgroud02);
                 ivIntroBackground.setVisibility(View.VISIBLE);
+
+                PageUtil.setNoticePage(2);
                 PageIndex = 2;
                 break;
             case 3:
                 ivIntroBackground.setImageResource(R.drawable.img_decibel_intro_over_backgroud03);
                 ivIntroBackground.setVisibility(View.VISIBLE);
+
+                PageUtil.setNoticePage(3);
                 PageIndex = 3;
                 break;
             case 4:
                 ivIntroBackground.setImageResource(R.drawable.img_decibel_intro_over_backgroud04);
                 ivIntroBackground.setVisibility(View.VISIBLE);
+
+                PageUtil.setNoticePage(4);
                 PageIndex = 4;
                 break;
             case 5:
                 finish();
                 PageUtil.startActivity(getApplicationContext(), DeviceSelectActivity.class);
+                PageUtil.setNoticePage(0);
                 break;
         }
     }
