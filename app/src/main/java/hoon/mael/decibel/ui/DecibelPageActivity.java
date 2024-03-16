@@ -83,9 +83,9 @@ public class DecibelPageActivity extends AppCompatActivity {
     private Thread TimerCountRunnable = new Thread() {
         @Override
         public void run() {
-            //if (BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_STOP && !(decibelPage02.getVisibility() == View.VISIBLE)) {
+            if (BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_STOP && !(decibelPage02.getVisibility() == View.VISIBLE)) {
                 if (!(decibelPage02.getVisibility() == View.VISIBLE) && PageUtil.getPage() == 0 && !PageUtil.getInputNoticeActivity()
-                && !PageUtil.getDecibelIntroActivity()) {
+                        && !PageUtil.getDecibelIntroActivity()) {
                     TimerCount++;
                     if (TimerCount >= PAGE_CHANGE_INTERVAL) {
                         TimerCount = 0;
@@ -93,42 +93,42 @@ public class DecibelPageActivity extends AppCompatActivity {
                         decibelPage02.setVisibility(View.VISIBLE);
                         decibelPage03.setVisibility(View.GONE);
                     }
-                } else if(PageUtil.getPage() == 0&& !PageUtil.getInputNoticeActivity()&& !PageUtil.getDecibelIntroActivity()) {
+                } else if (PageUtil.getPage() == 0 && !PageUtil.getInputNoticeActivity() && !PageUtil.getDecibelIntroActivity()) {
                     TimerCount++;
                     if (TimerCount >= PAGE_CHANGE_INTERVAL) {
                         TimerCount = 0;
                         showCurrentPage();
                     }
                 }
-            if (PageUtil.getPage() != 0) {
-                TimerCount++;
-                if (TimerCount >= PAGE_CHANGE_INTERVAL) {
-                    TimerCount = 0;
-                    Intent intent = new Intent(getApplicationContext(), NoticeActivity.class);
-                    intent.putExtra(PAGE_INDEX_END, PageUtil.getPage());
-                    startActivity(intent);
-                    finish();
+                if (PageUtil.getPage() != 0) {
+                    TimerCount++;
+                    if (TimerCount >= PAGE_CHANGE_INTERVAL) {
+                        TimerCount = 0;
+                        Intent intent = new Intent(getApplicationContext(), NoticeActivity.class);
+                        intent.putExtra(PAGE_INDEX_END, PageUtil.getPage());
+                        startActivity(intent);
+                        finish();
+                    }
+                }
+                if (PageUtil.getInputNoticeActivity()) {
+                    TimerCount++;
+                    if (TimerCount >= PAGE_CHANGE_INTERVAL) {
+                        TimerCount = 0;
+                        finish();
+                        Intent intent = new Intent(getApplicationContext(), InputNoticeActivity.class);
+                        startActivity(intent);
+                    }
+                }
+                if (PageUtil.getDecibelIntroActivity()) {
+                    TimerCount++;
+                    if (TimerCount >= PAGE_CHANGE_INTERVAL) {
+                        TimerCount = 0;
+                        finish();
+                        Intent intent = new Intent(getApplicationContext(), DecibelIntroActivity.class);
+                        startActivity(intent);
+                    }
                 }
             }
-            if(PageUtil.getInputNoticeActivity()){
-                TimerCount++;
-                if (TimerCount >= PAGE_CHANGE_INTERVAL) {
-                    TimerCount = 0;
-                    finish();
-                    Intent intent = new Intent(getApplicationContext(), InputNoticeActivity.class);
-                    startActivity(intent);
-                }
-            }
-            if(PageUtil.getDecibelIntroActivity()){
-                TimerCount++;
-                if (TimerCount >= PAGE_CHANGE_INTERVAL) {
-                    TimerCount = 0;
-                    finish();
-                    Intent intent = new Intent(getApplicationContext(), DecibelIntroActivity.class);
-                    startActivity(intent);
-                }
-            }
-           // }
             if (BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_RUNNING) {
                 if (BluetoothStateUtil.getStartToogle()) {
                     BluetoothStateUtil.setStartToogle(false);
