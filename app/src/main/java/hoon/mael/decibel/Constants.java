@@ -10,6 +10,6 @@ public class Constants {
 
     public static final int NOTIFY_MANAGER_START_FOREGROUND_SERVICE = 1001;
 
-    public static final int PAGE_CHANGE_INTERVAL = 3; //3초
+    public static final int PAGE_CHANGE_INTERVAL = 10; //3초
     private Constants() {}
 }

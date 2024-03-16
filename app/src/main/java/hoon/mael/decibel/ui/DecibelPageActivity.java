@@ -569,7 +569,7 @@ public class DecibelPageActivity extends AppCompatActivity {
             pageIndex = 1;
             return 1;
         } else if (!isDecibelPage01Visible && isDecibelPage02Visible && !isDecibelPage03Visible
-                && BluetoothStateUtil.getBleState() == BluetoothStateUtil.BLE_STATE_STOP) {
+                ) {
             pageIndex = 2;
             return 2;
         } else if (!isDecibelPage01Visible && !isDecibelPage02Visible && isDecibelPage03Visible) {
